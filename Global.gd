@@ -1,6 +1,7 @@
 extends Node
 
 var ip = ''
+var username = ''
 var is_server = false
 
 # Called when the node enters the scene tree for the first time.

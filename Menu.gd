@@ -1,10 +1,5 @@
 extends Control
 
-
-# Declare member variables here. Examples:
-# var a: int = 2
-# var b: String = "text"
-
 onready var join_button = $Client/VBoxContainer/HBoxContainer/Join
 onready var create_button = $Client/VBoxContainer/HBoxContainer/Create
 onready var ip = $Client/VBoxContainer/Ip
@@ -24,12 +19,11 @@ func _create_pressed():
     start_game()
     
 func _join_pressed():
-    print('join');
+    start_game()
     global.is_server = false
     global.ip = ip.text
     global.username = username.text
-    network.connect_to_server(username, ip)
-    start_game()
+    network.connect_to_server(global.username, global.ip)
     
 func start_game():
     get_tree().change_scene("res://Main.tscn")

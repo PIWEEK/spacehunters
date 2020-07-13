@@ -17,5 +17,3 @@ func create_player(id, is_curreent_player):
         player.set_position(player.get_position() + Vector2(100, 0))
         
     self.add_child(player)        
-
-
