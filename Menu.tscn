@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Menu.gd" type="Script" id=1]
+
+[node name="Menu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -1.50732
+margin_bottom = -1.50732
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Client" type="MarginContainer" parent="."]
+margin_left = 673.0
+margin_top = 405.0
+margin_right = 938.0
+margin_bottom = 454.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Client"]
+margin_right = 265.0
+margin_bottom = 78.0
+size_flags_horizontal = 3
+custom_constants/separation = 5
+
+[node name="Username" type="LineEdit" parent="Client/VBoxContainer"]
+margin_right = 265.0
+margin_bottom = 24.0
+hint_tooltip = "Username"
+
+[node name="Ip" type="LineEdit" parent="Client/VBoxContainer"]
+margin_top = 29.0
+margin_right = 265.0
+margin_bottom = 53.0
+hint_tooltip = "IP"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Client/VBoxContainer"]
+margin_top = 58.0
+margin_right = 265.0
+margin_bottom = 78.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Join" type="Button" parent="Client/VBoxContainer/HBoxContainer"]
+margin_right = 35.0
+margin_bottom = 20.0
+text = "Join"
+
+[node name="Create" type="Button" parent="Client/VBoxContainer/HBoxContainer"]
+margin_left = 39.0
+margin_right = 92.0
+margin_bottom = 20.0
+text = "Create"
