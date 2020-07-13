@@ -14,7 +14,6 @@ onready var beam_particles := $BeamParticles2D
 
 onready var line_width: float = fill.width
 
-
 func _ready() -> void:
     set_physics_process(false)
     fill.points[1] = Vector2.ZERO
@@ -39,7 +38,6 @@ func set_is_casting(cast: bool) -> void:
     set_physics_process(is_casting)
     beam_particles.emitting = is_casting
     casting_particles.emitting = is_casting
-
 
 func cast_beam() -> void:
     var cast_point := cast_to
