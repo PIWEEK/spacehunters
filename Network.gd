@@ -16,6 +16,7 @@ func _ready():
 
 func create_server(player_nickname):
     self_data.name = player_nickname
+    self_data.position = Vector2(1, 1)
     players[1] = self_data
     var peer = NetworkedMultiplayerENet.new()
     peer.create_server(DEFAULT_PORT, MAX_PLAYERS)
