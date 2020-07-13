@@ -11,8 +11,9 @@ var can_fire = true
 var fire_rate := 0.2
 
 puppet var puppet_position = Vector2()
-puppet var puppet_direction = Vector2.ZERO
-puppet var fire_weapon = false
+puppet var puppet_direction = 0.0
+puppet var fire_main_weapon = false
+puppet var fire_secondary_weapon = false
 
 func _ready() -> void:
     if is_network_master():  
@@ -25,13 +26,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:        
     if is_network_master():  
         if Input.is_action_pressed("fire_weapon") && can_fire:
-            plasma_shot()
+            rpc("plasma_shot")
             can_fire = false
             yield(get_tree().create_timer(fire_rate), 'timeout')
             can_fire = true
             
-    elif laser.is_casting != fire_weapon:
-        laser.is_casting = fire_weapon
+    elif laser.is_casting != fire_secondary_weapon:
+        laser.is_casting = fire_secondary_weapon  
     
 func get_dir():
     return self.get_angle_to(get_global_mouse_position())
@@ -48,7 +49,7 @@ func _physics_process(delta: float) -> void:
                 if dir > 0: self.rotation += turn_speed
                 if dir < 0: self.rotation -= turn_speed
                 
-            rset_unreliable("puppet_direction", dir)
+            rset_unreliable("puppet_direction", self.rotation)
             
         move_and_collide(movement * speed * delta)
         rset_unreliable("puppet_position", movement * speed)
@@ -76,9 +77,9 @@ func _unhandled_input(event: InputEvent) -> void:
             return       
             
         laser.is_casting = event.is_action_pressed("fire_secondary_weapon")
-        rset("fire_weapon", laser.is_casting)
+        rset("fire_secondary_weapon", laser.is_casting)
 
-func plasma_shot():
+remotesync func plasma_shot():
     var projectile = plasma.instance()
     projectile.global_position = $InitProjectile.global_position
     projectile.direction = Vector2(cos(self.rotation), sin(self.rotation))
