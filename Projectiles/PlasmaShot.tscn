@@ -51,3 +51,5 @@ autostart = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Flicker = SubResource( 3 )
+
+[node name="Tween" type="Tween" parent="."]
