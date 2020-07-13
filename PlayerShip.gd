@@ -20,7 +20,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:        
     if is_network_master():  
         pass
-    else:
+    elif laser.is_casting != fire_weapon:
         laser.is_casting = fire_weapon
         
 func _physics_process(delta: float) -> void:
@@ -41,7 +41,12 @@ func _physics_process(delta: float) -> void:
         move_and_collide(puppet_position * delta)
         
     if get_tree().is_network_server():
-        network.update_position(int(name), position)        
+        var player_id = int(name)
+        
+        if network.players.has(player_id):
+            network.update_position(int(name), position)        
+        else:
+            queue_free()
     
 func get_movement() -> Vector2:
     return Vector2(
