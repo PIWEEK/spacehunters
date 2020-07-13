@@ -1,7 +1,6 @@
 extends Node2D
 
 onready var laser := $LaserBeam2D
-var is_current_player
 var last_position
 
 slave var slave_position = Vector2()
