@@ -82,3 +82,8 @@ flag_align_y = true
 gravity = Vector2( 0, 0 )
 scale_amount = 0.25
 color_ramp = SubResource( 5 )
+
+[node name="ShipTrail" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+[connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]
