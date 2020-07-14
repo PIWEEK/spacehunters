@@ -12,6 +12,7 @@ var fire_rate := 0.2
 
 puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
+puppet var puppet_global_position = Vector2()
 puppet var fire_main_weapon = false
 puppet var fire_secondary_weapon = false
 
@@ -33,6 +34,10 @@ func _process(delta: float) -> void:
             
     elif laser.is_casting != fire_secondary_weapon:
         laser.is_casting = fire_secondary_weapon  
+        
+    if not is_network_master():  
+        self.rotation = puppet_direction
+        self.position = puppet_global_position        
     
 func get_dir():
     return self.get_angle_to(get_global_mouse_position())
@@ -51,11 +56,13 @@ func _physics_process(delta: float) -> void:
                 
             rset_unreliable("puppet_direction", self.rotation)
             
+        
         move_and_collide(movement * speed * delta)
-        rset_unreliable("puppet_position", movement * speed)
+        
+        rset("puppet_position", movement * speed * delta)
+        rset_unreliable("puppet_global_position", position)
     else:
-        self.rotation = puppet_direction
-        move_and_collide(puppet_position * delta)
+        move_and_collide(puppet_position)
         
     if get_tree().is_network_server():
         var player_id = int(name)

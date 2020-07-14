@@ -41,7 +41,6 @@ func _ready():
     pass # Replace with function body.
     
 func _process(delta):
-    print(shield, ' ', ShieldTween.is_active())
     HullBar.value = hull
     ShieldBar.value = shield
     
