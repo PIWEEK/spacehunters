@@ -14,7 +14,6 @@ __meta__ = {
 [node name="ShieldBar" type="TextureProgress" parent="."]
 margin_right = 1858.0
 margin_bottom = 175.0
-max_value = 100.0
 value = 5.0
 texture_progress = ExtResource( 2 )
 nine_patch_stretch = true

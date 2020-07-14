@@ -40,6 +40,11 @@ func _ready():
     timer.start()
     pass # Replace with function body.
     
+func _process(delta):
+    print(shield, ' ', ShieldTween.is_active())
+    HullBar.value = hull
+    ShieldBar.value = shield
+    
 func _on_damage():
     if shield >= 0:
         var new_shield = shield - rng.randf_range(10.0, 40.0)
@@ -50,40 +55,37 @@ func _on_damage():
 
 func _update_hull(value_start: float, current_value: float):
     if current_value > 0:
-         HullTween.interpolate_property(
-            self, "value", value_start, current_value, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
+        HullTween.interpolate_property(
+            self, "hull", hull, current_value, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
         )
     else:
         HullTween.interpolate_property(
-            self, "value", value_start, 0, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
+            self, "hull", hull, 0, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
         )
     if current_value > 0:
-        HullBar.value = current_value
-        hull = current_value
         $HullText.bbcode_text = str(current_value)
     else:
-        HullBar.value = 0
-        hull = 0
         $HullText.bbcode_text = str(0)
+        
+    if not HullTween.is_active():
+        HullTween.start()
 
-    
 func _update_shield(value_start: float, current_value: float):
     if current_value > 0:
         ShieldTween.interpolate_property(
-            ShieldTween, "value", 300, current_value, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
+            self, "shield", shield, current_value, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
         )
     else :
         ShieldTween.interpolate_property(
-            self, "value", value_start, 0, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
+            self, "shield", shield, 0, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
         )
     if current_value > 0:
-        ShieldBar.value = current_value
         $ShieldText.bbcode_text = str(current_value)
-        shield = current_value
     else:
         $ShieldText.bbcode_text = str(0)
-        ShieldBar.value = 0
-        shield = 0
+        
+    if not ShieldTween.is_active():
+        ShieldTween.start()        
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
