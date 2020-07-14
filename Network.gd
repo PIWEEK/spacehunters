@@ -5,6 +5,7 @@ const DEFAULT_PORT = 31400
 const MAX_PLAYERS = 10
 
 var players = { }
+var asteroids = {}
 var self_data = { name = '', position = Vector2(360, 180) }
 
 signal player_disconnected
@@ -27,8 +28,7 @@ func connect_to_server(player_nickname, ip = DEFAULT_IP):
     get_tree().connect('connected_to_server', self, '_connected_to_server')
     if ip.length() == 0:
         ip = DEFAULT_IP
-        
-    print("dsfds ", ip)
+
     var peer = NetworkedMultiplayerENet.new()
     peer.create_client(ip, DEFAULT_PORT)
     get_tree().set_network_peer(peer)
@@ -67,3 +67,6 @@ remote func _send_player_info(id, info):
 
 func update_position(id, position):
     players[id].position = position
+    
+func update_asteroid(id, position, rotation_degrees, scale):
+    asteroids[id] = { position = position, rotation_degrees = rotation_degrees, scale = scale }

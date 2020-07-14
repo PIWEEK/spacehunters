@@ -4,11 +4,15 @@ const ASTEROIDS_NUM = 40
 const MOVING_ASTEROID = preload("res://Objects/MovingAsteroid.tscn")
 const TIMER = 30.0 # seconds
 
+puppet var remote_asteroids = {}
+var spawned_asteroids = false
+
 var _timer = null
 
 func _ready():
-    _spawn_asteroids()
-    _spawn_asteroids_periodically()
+    if is_network_master(): 
+        _spawn_asteroids()
+    # _spawn_asteroids_periodically()
     
 func _spawn_asteroids_periodically():
     _timer = Timer.new()
@@ -24,6 +28,36 @@ func _spawn_asteroids():
         var asteroid = MOVING_ASTEROID.instance()
         # add it as a child of this "universe"-node       
         add_child(asteroid)
+        
+    spawned_asteroids = true
+        
+func _process(delta: float) -> void:
+    if is_network_master(): 
+        rset_unreliable("remote_asteroids", Network.asteroids)
+    else:
+        if spawned_asteroids:
+            var asteroids = self.get_children()
+            for asteroid_id in remote_asteroids:
+                var asteroid = find_asteroid_by_id(asteroids, asteroid_id)
+                
+                if asteroid:
+                    asteroid.remote_update(remote_asteroids[asteroid_id])
+        elif remote_asteroids:    
+            for asteroid_id in remote_asteroids: 
+                print('creo')
+                var asteroid = MOVING_ASTEROID.instance()
+                asteroid.id = asteroid_id
+                add_child(asteroid)    
+            
+            spawned_asteroids = true              
+       
+func find_asteroid_by_id(asteroids, id):
+    for child in asteroids:
+        print('find ', id, ' / ', child.id)
+        if(child.id == id):
+            return child
+
+    return null
 
 func _on_Timer_timeout():
     _spawn_asteroids()

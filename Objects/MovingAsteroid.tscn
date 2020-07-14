@@ -6,7 +6,9 @@
 [sub_resource type="CircleShape2D" id=1]
 radius = 62.0
 
-[node name="Asteroid mv" type="KinematicBody2D"]
+[node name="Asteroid mv" type="KinematicBody2D" groups=[
+"asteroid",
+]]
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
