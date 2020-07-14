@@ -33,11 +33,7 @@ func _process(delta: float) -> void:
             can_fire = true
             
     elif laser.is_casting != fire_secondary_weapon:
-        laser.is_casting = fire_secondary_weapon  
-        
-    if not is_network_master():  
-        self.rotation = puppet_direction
-        self.position = puppet_global_position        
+        laser.is_casting = fire_secondary_weapon    
     
 func get_dir():
     return self.get_angle_to(get_global_mouse_position())
@@ -62,7 +58,9 @@ func _physics_process(delta: float) -> void:
         rset("puppet_position", movement * speed * delta)
         rset_unreliable("puppet_global_position", position)
     else:
-        move_and_collide(puppet_position)
+        self.rotation = puppet_direction
+        self.position = puppet_global_position        
+        #move_and_collide(puppet_position)
         
     if get_tree().is_network_server():
         var player_id = int(name)
