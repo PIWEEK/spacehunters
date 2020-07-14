@@ -7,6 +7,8 @@ func _ready() -> void:
     create_player(selfPeerID)         
 
 func create_player(id):
+    Network.players[get_tree().get_network_unique_id()] = Network.self_data
+    
     var player = preload("res://PlayerShip.tscn").instance()
     player.set_name(str(id))
     player.set_network_master(id)

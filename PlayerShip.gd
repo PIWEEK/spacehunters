@@ -13,7 +13,7 @@ var can_fire = true
 var fire_rate := 0.2
 var charge = false
 var camera
-var boost_speed = 2500
+var boost_speed = 1500
 
 puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
@@ -23,8 +23,12 @@ puppet var fire_secondary_weapon = false
     
 func _ready() -> void:
     if is_network_master():  
+        Network.player_id = int(name)
+    
+    if is_network_master():  
         camera = Camera2D.new()
         camera.current = true
+        
         self.add_child(camera)
         
     self.rotation = get_dir()
@@ -52,7 +56,6 @@ func _physics_process(delta: float) -> void:
 
     var dir = get_dir()
     var movement = get_movement();
-        
     
     if is_network_master():   
         if speed > default_speed:
@@ -84,14 +87,13 @@ func _physics_process(delta: float) -> void:
         self.rotation = puppet_direction
         self.position = puppet_global_position        
         #move_and_collide(puppet_position)
-        
-    if get_tree().is_network_server():
-        var player_id = int(name)
-        
-        if network.players.has(player_id):
-            network.update_position(int(name), position)        
-        else:
-            queue_free()
+    
+    var player_id = int(name)
+    
+    if network.players.has(player_id):
+        network.update_position(int(name), position)        
+    else:
+        queue_free()
             
     if Input.get_action_strength("ui_down") && speed > default_speed:
         speed = default_speed

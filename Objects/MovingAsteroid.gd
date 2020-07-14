@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const MAX_POSITION = 2500
+const MAX_POSITION = 2000
 const VELOCITY = 3000
 const MIN_VELOCITY = 10
 const MAX_VELOCITY = 100 #20

@@ -7,6 +7,7 @@ const MAX_PLAYERS = 10
 var players = { }
 var asteroids = {}
 var self_data = { name = '', position = Vector2(360, 180) }
+var player_id = 0
 
 signal player_disconnected
 signal server_disconnected
