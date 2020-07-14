@@ -13,7 +13,7 @@ var can_fire = true
 var fire_rate := 0.2
 var charge = false
 var camera
-var boost_speed = 3000
+var boost_speed = 2500
 
 puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
@@ -52,20 +52,20 @@ func _physics_process(delta: float) -> void:
 
     var dir = get_dir()
     var movement = get_movement();
-    
-    if speed > default_speed:
-        if speed > boost_speed - 500:
-            camera.set_offset(Vector2(
-                rand_range(-1.0, 1.0) * shake_amount,
-                rand_range(-1.0, 1.0) * shake_amount
-            ))           
         
-        speed -= delta * 300
-
-        if speed < default_speed:
-            speed = default_speed
     
     if is_network_master():   
+        if speed > default_speed:
+            if speed > boost_speed - 500:
+                camera.set_offset(Vector2(
+                    rand_range(-1.0, 1.0) * shake_amount,
+                    rand_range(-1.0, 1.0) * shake_amount
+                ))           
+            
+            speed -= delta * 300
+    
+            if speed < default_speed:
+                speed = default_speed
         if last_direction != dir:     
             if abs(dir) < turn_speed:
                 self.rotation += dir
@@ -92,6 +92,9 @@ func _physics_process(delta: float) -> void:
             network.update_position(int(name), position)        
         else:
             queue_free()
+            
+    if Input.get_action_strength("ui_down") && speed > default_speed:
+        speed = default_speed
     
 func get_movement() -> Vector2:
     if speed > default_speed:
@@ -102,7 +105,7 @@ func get_movement() -> Vector2:
         Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
     )
 
-func init_charge():
+remotesync func init_charge():
     charge =  true
     $ParticlesCharge.emitting = true
     yield(get_tree().create_timer(2.8), "timeout")
@@ -111,13 +114,12 @@ func init_charge():
     speed = boost_speed
 
 func _unhandled_input(event: InputEvent) -> void:
-    if event.is_action("charge"):
-        
-        if event.is_action_pressed("charge"):
-            init_charge()
-        return
-    
     if is_network_master():
+        if event.is_action("charge"):        
+            if event.is_action_pressed("charge"):
+                rpc("init_charge")
+            return
+                
         if not event.is_action("fire_secondary_weapon"):
             return       
             
