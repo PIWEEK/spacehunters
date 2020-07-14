@@ -3,6 +3,7 @@ extends KinematicBody2D
 onready var laser := $LaserBeam2D
 onready var network = get_node("/root/Network")
 var default_speed = 400
+var shake_amount = 6.0
 
 var last_direction
 var speed = default_speed
@@ -11,16 +12,18 @@ var plasma = preload('res://Projectiles/PlasmaShot.tscn')
 var can_fire = true
 var fire_rate := 0.2
 var charge = false
+var camera
+var boost_speed = 3000
 
 puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
 puppet var puppet_global_position = Vector2()
 puppet var fire_main_weapon = false
 puppet var fire_secondary_weapon = false
-
+    
 func _ready() -> void:
     if is_network_master():  
-        var camera = Camera2D.new()
+        camera = Camera2D.new()
         camera.current = true
         self.add_child(camera)
         
@@ -29,7 +32,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:     
     if charge:
         return
-       
+    
     if is_network_master():  
         if Input.is_action_pressed("fire_weapon") && not Input.is_action_pressed("fire_secondary_weapon") && can_fire:
             rpc("plasma_shot")
@@ -51,6 +54,12 @@ func _physics_process(delta: float) -> void:
     var movement = get_movement();
     
     if speed > default_speed:
+        if speed > boost_speed - 500:
+            camera.set_offset(Vector2(
+                rand_range(-1.0, 1.0) * shake_amount,
+                rand_range(-1.0, 1.0) * shake_amount
+            ))           
+        
         speed -= delta * 300
 
         if speed < default_speed:
@@ -99,7 +108,7 @@ func init_charge():
     yield(get_tree().create_timer(2.8), "timeout")
     $ParticlesBoost.emitting = true    
     charge =  false
-    speed = 3000
+    speed = boost_speed
 
 func _unhandled_input(event: InputEvent) -> void:
     if event.is_action("charge"):
