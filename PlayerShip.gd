@@ -25,7 +25,7 @@ func _ready() -> void:
         
 func _process(delta: float) -> void:        
     if is_network_master():  
-        if Input.is_action_pressed("fire_weapon") && can_fire:
+        if Input.is_action_pressed("fire_weapon") && not Input.is_action_pressed("fire_secondary_weapon") && can_fire:
             rpc("plasma_shot")
             can_fire = false
             yield(get_tree().create_timer(fire_rate), 'timeout')
@@ -83,7 +83,7 @@ remotesync func plasma_shot():
     var projectile = plasma.instance()
     projectile.global_position = $InitProjectile.global_position
     projectile.direction = Vector2(cos(self.rotation), sin(self.rotation))
-
+    
     $'/root/Main'.add_child(projectile)
 
 func init(nickname, start_position):
