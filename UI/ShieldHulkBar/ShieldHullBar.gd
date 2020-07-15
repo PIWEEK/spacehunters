@@ -33,24 +33,22 @@ func _ready():
     $HullText.bbcode_text = str(hull)
     $ShieldText.bbcode_text = str(shield)
     
-    var timer = Timer.new()
-    timer.connect("timeout", self, "_on_damage")
-    add_child(timer)
-    timer.wait_time = 2
-    timer.start()
-    pass # Replace with function body.
-    
 func _process(delta):
     HullBar.value = hull
     ShieldBar.value = shield
     
-func _on_damage():
-    if shield >= 0:
-        var new_shield = shield - rng.randf_range(10.0, 40.0)
+func _on_damage_shield(new_shield):
+    if new_shield < 0:
+        _update_shield(shield, 0)
+    else:
         _update_shield(shield, new_shield)
-    if shield == 0:
-        var new_hull = hull - rng.randf_range(10.0, 40.0)
-        _update_hull(hull, new_hull)
+    
+        
+func _on_damage_hull(new_hull):
+    if new_hull < 0:
+        _update_hull(hull, 0)
+    else:
+        _update_hull(hull, new_hull)        
 
 func _update_hull(value_start: float, current_value: float):
     if current_value > 0:

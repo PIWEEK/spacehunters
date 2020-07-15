@@ -55,7 +55,9 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 0.17
 
-[node name="PlayerShip" type="KinematicBody2D"]
+[node name="PlayerShip" type="KinematicBody2D" groups=[
+"ship",
+]]
 position = Vector2( 188.09, 295.571 )
 script = ExtResource( 1 )
 
@@ -132,10 +134,12 @@ begin_cap_mode = 2
 end_cap_mode = 2
 script = ExtResource( 5 )
 is_emitting = true
+resolution = 5.0
 lifetime = 0.7
+max_points = 100
 target_path = NodePath("..")
 
-[node name="Particles2D" type="Particles2D" parent="."]
+[node name="Shield" type="Particles2D" parent="."]
 position = Vector2( -4, 0 )
 amount = 5
 lifetime = 10.0

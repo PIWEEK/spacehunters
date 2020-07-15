@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 onready var laser := $LaserBeam2D
 onready var network = get_node("/root/Network")
+onready var shield_node := $Shield
 var default_speed = 400
 var shake_amount = 6.0
 var has_boost = false
@@ -10,11 +11,15 @@ var last_direction
 var speed = default_speed
 var turn_speed = deg2rad(5)
 var plasma = preload('res://Projectiles/PlasmaShot.tscn')
+var explosion = preload('res://Explosion/Explosion.tscn')
 var can_fire = true
 var fire_rate := 0.2
 var charge = false
 var camera
 var boost_speed = 1500
+var hull := 300
+var shield := 100
+var die = false
 
 puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
@@ -162,3 +167,32 @@ func _on_ShipTrail_timeout():
             ghost.modulate.a = 0.5
             var dir = ghost.get_angle_to( get_global_mouse_position())+90 # TODO: fix
             ghost.rotation += dir
+
+func damage(amount): 
+    var ui = $'/root/Main/CanvasLayer/ShieldHullBar'    
+    
+    if shield > 0:
+        shield = shield - amount
+        
+        if self.is_network_master():
+            ui._on_damage_shield(shield)
+    
+    if shield <= 0 && hull > 0:
+        print('hide shield')
+        shield_node.visible = false
+        
+        if shield < 0:
+            hull = hull + shield
+            shield = 0
+        else:
+            hull = hull - amount
+            
+        if self.is_network_master():
+            ui._on_damage_hull(hull)            
+    
+    if hull <= 0 && !die:
+        die = true
+        self.add_child(explosion.instance())
+        $CollisionShape2D.disabled = true
+        yield(get_tree().create_timer(3), 'timeout')
+        self.visible = false

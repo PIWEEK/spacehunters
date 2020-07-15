@@ -13,6 +13,8 @@ onready var collision_particles := $CollisionParticles2D
 onready var beam_particles := $BeamParticles2D
 
 onready var line_width: float = fill.width
+var damage_rate = 0.05
+var timer = null
 
 func _ready() -> void:
     set_physics_process(false)
@@ -34,10 +36,23 @@ func set_is_casting(cast: bool) -> void:
     else:
         collision_particles.emitting = false
         disappear()
+        self.check_current_damage()
 
     set_physics_process(is_casting)
     beam_particles.emitting = is_casting
     casting_particles.emitting = is_casting
+
+func make_damage_ship(ship):
+    if ship:
+        ship.damage(3)
+
+func damage_ship(ship):
+    if !timer:
+        timer = Timer.new()
+        timer.connect("timeout", self, "make_damage_ship", [ship]) 
+        timer.wait_time = damage_rate
+        add_child(timer)
+        timer.start() 
 
 func cast_beam() -> void:
     var cast_point := cast_to
@@ -50,14 +65,26 @@ func cast_beam() -> void:
         
         if collider.is_in_group('asteroid'):
             collider.disolve()
+        elif collider.is_in_group('ship'):
+            self.damage_ship(collider)
+        elif timer:
+            self.check_current_damage()
+            
         cast_point = to_local(get_collision_point())
         collision_particles.global_rotation = get_collision_normal().angle()
         collision_particles.position = cast_point
+    else:
+        self.check_current_damage()
 
     fill.points[1] = cast_point
     beam_particles.position = cast_point * 0.5
     beam_particles.process_material.emission_box_extents.x = cast_point.length() * 0.5
 
+func check_current_damage():
+    if timer:
+        timer.stop()
+        self.remove_child(timer)
+        timer = null
 
 func appear() -> void:
     if tween.is_active():
