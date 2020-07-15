@@ -26,14 +26,10 @@ var die = false
 puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
 puppet var puppet_global_position = Vector2()
-puppet var fire_main_weapon = false
-puppet var fire_secondary_weapon = false
 
 func _ready() -> void:
     if is_network_master():
         Network.player_id = int(name)
-
-    if is_network_master():
         camera = Camera2D.new()
         camera.current = true
 
@@ -41,7 +37,7 @@ func _ready() -> void:
 
     self.rotation = get_dir()
 
-    Input.set_mouse_mode((Input.MOUSE_MODE_HIDDEN))
+    # Input.set_mouse_mode((Input.MOUSE_MODE_HIDDEN))
 
 # todos
 remote func test1():
@@ -70,13 +66,13 @@ func _process(delta: float) -> void:
 
     if is_network_master():
         if Input.is_action_pressed("fire_weapon") && not Input.is_action_pressed("fire_secondary_weapon") && can_fire:
-            rpc("plasma_shot")
+            rpc("plasma_shot", {
+                rotation = rotation,
+                position = position
+            })
             can_fire = false
             yield(get_tree().create_timer(fire_rate), 'timeout')
             can_fire = true
-
-    elif laser.is_casting != fire_secondary_weapon:
-        laser.is_casting = fire_secondary_weapon
 
     if Input.is_action_just_pressed("left_mouse"):
         $Weapon1Sound.play()
@@ -114,10 +110,9 @@ func _physics_process(delta: float) -> void:
 
             rset_unreliable("puppet_direction", self.rotation)
 
-
         move_and_collide(movement * speed * delta)
 
-        rset("puppet_position", movement * speed * delta)
+        # rset("puppet_position", movement * speed * delta)
         rset_unreliable("puppet_global_position", position)
     else:
         self.rotation = puppet_direction
@@ -131,6 +126,7 @@ func _physics_process(delta: float) -> void:
     else:
         queue_free()
 
+    # cancel high speed
     if Input.get_action_strength("ui_down") && _high_speed():
         speed = default_speed
 
@@ -143,7 +139,11 @@ func get_movement() -> Vector2:
         Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
     )
 
-remotesync func init_charge():
+remotesync func init_charge(data):
+    if not is_network_master():
+        self.rotation = data.rotation
+        self.position = data.position
+
     charge =  true
     $ParticlesCharge.emitting = true
     yield(get_tree().create_timer(2.5), "timeout")
@@ -157,20 +157,32 @@ func _unhandled_input(event: InputEvent) -> void:
     if is_network_master():
         if event.is_action("charge"):
             if event.is_action_pressed("charge"):
-                rpc("init_charge")
+                rpc("init_charge", {
+                    rotation = rotation,
+                    position = position
+                })
             return
 
         if not event.is_action("fire_secondary_weapon"):
             return
 
-        laser.is_casting = event.is_action_pressed("fire_secondary_weapon")
-        rset("fire_secondary_weapon", laser.is_casting)
+        rpc("fire_secondary_weapon", {
+            plasma = event.is_action_pressed("fire_secondary_weapon"),
+            rotation = puppet_direction,
+            position = puppet_global_position
+        })
 
-remotesync func plasma_shot():
-    # debug
-    # rpc('test1')
-    # rpc('test2')
-    # rpc('test3')
+remotesync func fire_secondary_weapon(data):
+    laser.is_casting = data.plasma
+
+    if not is_network_master():
+        self.rotation = data.rotation
+        self.position = data.position
+
+remotesync func plasma_shot(data):
+    if not is_network_master():
+        self.rotation = data.rotation
+        self.position = data.position
 
     var projectile = plasma.instance()
 
@@ -190,6 +202,7 @@ func _high_speed():
 
 func _on_ShipTrail_timeout():
     if (_high_speed() and HYPERJUMP_TRAIL_ACTIVE):
+        print('inicio ', self.get_instance_id())
         var move_vector = get_movement()
         if (move_vector.x != 0 || move_vector.y != 0):
             # first make a copy of ghost object
