@@ -18,6 +18,5 @@ func create_player(id):
     self.add_child(player)        
 
 func _unhandled_input(event: InputEvent) -> void:
-    if is_network_master():
-        if event.is_action("show_game_stats"):        
-            game_stats.visible = Input.is_action_pressed("show_game_stats")
+    if event.is_action("show_game_stats"):        
+        game_stats.visible = Input.is_action_pressed("show_game_stats")
