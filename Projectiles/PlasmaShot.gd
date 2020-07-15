@@ -21,7 +21,9 @@ func _physics_process(delta: float) -> void:
     var collision := move_and_collide(direction * speed * delta)
     
     if collision:
-       destroy()
+        if collision.collider.is_in_group('asteroid'):
+            collision.collider.shoot()
+        destroy()
 
 func destroy() -> void:
     self.set_physics_process(false)

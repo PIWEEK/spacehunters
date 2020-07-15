@@ -9,11 +9,13 @@ const MIN_SCALE_FACTOR = 0.7
 const MAX_SCALE_FACTOR = 1.3
 onready var tween := $Tween
 onready var sprite := $Sprite
+onready var animation := $AnimationPlayer
 
 export var emission_color: Gradient = Gradient.new() setget _set_gradient
 
 var rnd = RandomNumberGenerator.new()
 var velocity = Vector2()
+var shoot_received = 0
 
 export var id = 0;
 
@@ -31,6 +33,12 @@ func _ready():
 func _process(delta):
     if is_network_master(): 
         rotation_degrees += ROTATION_DEGREES * delta    
+        
+    if shoot_received > 0 && shoot_received < 5:
+        var glow = float(shoot_received) / 10
+    
+        print(glow, ' ', shoot_received);
+        sprite.self_modulate = Color(1 + glow, 1, 1) 
 
 func _physics_process(delta):
     if is_network_master(): 
@@ -69,6 +77,10 @@ func dissolve_amount(value: float) -> void:
 func dissolve_color(value: float) -> void:
     sprite.material.set_shader_param("burn_color", emission_color.interpolate(value))
 
+func delete():
+    Network.erase_asteroid(self.get_instance_id())
+    queue_free()
+
 func disolve():
     if not destroying:
         destroying = true
@@ -81,7 +93,16 @@ func disolve():
         tween.start()
         yield(tween, "tween_all_completed")
         
-        Network.erase_asteroid(self.get_instance_id())
-        queue_free()
+        self.delete()
     
+func shoot(): 
+    shoot_received += 1
     
+    if shoot_received == 5:
+        animation.play("Explosion")
+    
+        yield(get_tree().create_timer(5000), 'timeout')
+        self.delete()
+        
+        
+        
