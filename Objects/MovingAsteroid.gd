@@ -37,7 +37,6 @@ func _process(delta):
     if shoot_received > 0 && shoot_received < 5:
         var glow = float(shoot_received) / 10
     
-        print(glow, ' ', shoot_received);
         sprite.self_modulate = Color(1 + glow, 1, 1) 
 
 func _physics_process(delta):
