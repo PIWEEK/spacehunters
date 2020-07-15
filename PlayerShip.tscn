@@ -1,19 +1,19 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://PlayerShip.gd" type="Script" id=1]
 [ext_resource path="res://Assets/topdown-player.svg" type="Texture" id=2]
 [ext_resource path="res://LaserBeam/LaserBeam.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Assets/cloud1.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Explosion.png" type="Texture" id=4]
 [ext_resource path="res://Trail2D.gd" type="Script" id=5]
-[ext_resource path="res://Assets/ShieldEnergy.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Energy.png" type="Texture" id=6]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 34.0609
 height = 1.44769
 
 [sub_resource type="Gradient" id=2]
-offsets = PoolRealArray( 0, 0.189, 0.669, 1 )
-colors = PoolColorArray( 0.0352941, 0.243137, 0.137255, 0, 0.129412, 0.894118, 0.501961, 1, 0.129412, 0.67451, 0.72549, 1, 0.129412, 0.52549, 0.882353, 0 )
+offsets = PoolRealArray( 0, 0.28655, 0.719298, 1 )
+colors = PoolColorArray( 0.0352941, 0.243137, 0.137255, 0, 0.417847, 0.0195313, 1, 1, 0.0387573, 0.992188, 0.791073, 1, 0.129412, 0.52549, 0.882353, 0 )
 
 [sub_resource type="GradientTexture" id=3]
 gradient = SubResource( 2 )
@@ -21,14 +21,19 @@ gradient = SubResource( 2 )
 [sub_resource type="ParticlesMaterial" id=4]
 flag_disable_z = true
 direction = Vector3( 0, 1, 0 )
+spread = 65.0
 gravity = Vector3( 0, 0, 0 )
-initial_velocity = 480.0
+initial_velocity = 400.0
 initial_velocity_random = 0.12
+angular_velocity = 5.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
-scale = 0.25
-scale_random = 0.11
+scale = 0.05
 color_ramp = SubResource( 3 )
+hue_variation = -1.0
+
+[sub_resource type="Curve" id=8]
+_data = [ Vector2( 0, 0.972727 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.672727 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="Gradient" id=5]
 offsets = PoolRealArray( 0, 0, 0.152, 0.768 )
@@ -39,22 +44,6 @@ _data = [ Vector2( 0, 0 ), 0.0, 1.02582, 0, 0, Vector2( 1, 1 ), 1.12082, 0.0, 0,
 
 [sub_resource type="Gradient" id=7]
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1 )
-
-[sub_resource type="Curve" id=7]
-_data = [ Vector2( 0.0454545, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.10101, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=8]
-curve = SubResource( 7 )
-
-[sub_resource type="ParticlesMaterial" id=9]
-flag_disable_z = true
-gravity = Vector3( 0, 0, 0 )
-angular_velocity = 300.0
-angular_velocity_random = 1.0
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-scale = 0.17
-scale_curve = SubResource( 8 )
 
 [node name="PlayerShip" type="KinematicBody2D"]
 position = Vector2( 188.09, 295.571 )
@@ -80,10 +69,11 @@ position = Vector2( 40, 0 )
 position = Vector2( -10, 0 )
 rotation = 1.5708
 emitting = false
-amount = 50
+amount = 500
 one_shot = true
-explosiveness = 0.9
-randomness = 0.89
+speed_scale = 2.0
+explosiveness = 0.8
+randomness = 0.5
 local_coords = false
 process_material = SubResource( 4 )
 texture = ExtResource( 4 )
@@ -97,14 +87,17 @@ lifetime = 1.4
 one_shot = true
 randomness = 1.0
 local_coords = false
-texture = ExtResource( 4 )
+texture = ExtResource( 6 )
 emission_shape = 4
 emission_points = PoolVector2Array( 0, -50, 0, 50, -50, 0, 50, 0, -25, -25, 25, -25, -25, 25, 25, 25 )
 emission_normals = PoolVector2Array( 0, 50, 0, -50, 50, 0, -50, 0, 25, 25, -25, 25, 25, -25, -25, -25 )
 emission_colors = PoolColorArray(  )
 flag_align_y = true
 gravity = Vector2( 0, 0 )
-scale_amount = 0.25
+angular_velocity = 720.0
+linear_accel = 1.0
+scale_amount = 0.06
+scale_amount_curve = SubResource( 8 )
 color_ramp = SubResource( 5 )
 
 [node name="ShipTrail" type="Timer" parent="."]
@@ -129,17 +122,6 @@ begin_cap_mode = 2
 end_cap_mode = 2
 script = ExtResource( 5 )
 is_emitting = true
-resolution = 5.0
 lifetime = 0.7
-max_points = 100
 target_path = NodePath("..")
 [connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]
-
-[node name="Particles2D" type="Particles2D" parent="."]
-position = Vector2( -5, 0 )
-amount = 5
-lifetime = 10.0
-preprocess = 1.0
-randomness = 1.0
-process_material = SubResource( 9 )
-texture = ExtResource( 6 )
