@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+const HYPERJUMP_TRAIL_ACTIVE = false
+
 onready var laser := $LaserBeam2D
 onready var network = get_node("/root/Network")
 onready var shield_node := $Shield
@@ -165,7 +167,7 @@ func _high_speed():
     return speed > default_speed
 
 func _on_ShipTrail_timeout():
-    if (_high_speed()):
+    if (_high_speed() and HYPERJUMP_TRAIL_ACTIVE):
         var move_vector = get_movement()
         if (move_vector.x != 0 || move_vector.y != 0):
             # first make a copy of ghost object
