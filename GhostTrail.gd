@@ -17,7 +17,7 @@ func _fade_ship_timer():
     _timer.start()
 
 func _on_Timer_timeout():
-    visible = false
+    queue_free()
 
 func _on_Tween_tween_completed(object, key):
     queue_free()

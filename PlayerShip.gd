@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const HYPERJUMP_TRAIL_ACTIVE = false
+const HYPERJUMP_TRAIL_ACTIVE = true
 
 onready var laser := $LaserBeam2D
 onready var network = get_node("/root/Network")
@@ -97,10 +97,16 @@ func _physics_process(delta: float) -> void:
                     rand_range(-1.0, 1.0) * shake_amount
                 ))
 
-            speed -= delta * 300
+            var new_speed = speed - delta * 300
 
-            if speed < default_speed:
-                speed = default_speed
+            if new_speed < default_speed:
+                new_speed = default_speed
+                
+            speed = new_speed
+            
+            if not self._high_speed():
+                rpc('sync_speed', speed)
+                
         if last_direction != dir:
             if abs(dir) < turn_speed:
                 self.rotation += dir
@@ -126,9 +132,10 @@ func _physics_process(delta: float) -> void:
     else:
         queue_free()
 
-    # cancel high speed
-    if Input.get_action_strength("ui_down") && _high_speed():
-        speed = default_speed
+    # cancel high speed & if uncommented sync with sound
+    # if Input.get_action_strength("ui_down") && _high_speed():
+    #    speed = default_speed
+    #    rpc('sync_speed', speed)
 
 func get_movement() -> Vector2:
     if(_high_speed()):
@@ -138,6 +145,10 @@ func get_movement() -> Vector2:
         Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
         Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
     )
+    
+# called to cancel high speed in other players
+puppet func sync_speed(new_speed):
+    speed = new_speed
 
 remotesync func init_charge(data):
     if not is_network_master():
@@ -168,8 +179,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
         rpc("fire_secondary_weapon", {
             plasma = event.is_action_pressed("fire_secondary_weapon"),
-            rotation = puppet_direction,
-            position = puppet_global_position
+            rotation = rotation,
+            position = position
         })
 
 remotesync func fire_secondary_weapon(data):
