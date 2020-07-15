@@ -112,6 +112,8 @@ begin_cap_mode = 2
 end_cap_mode = 2
 script = ExtResource( 5 )
 is_emitting = true
+resolution = 5.0
 lifetime = 0.7
+max_points = 100
 target_path = NodePath("..")
 [connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]

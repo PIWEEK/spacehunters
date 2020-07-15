@@ -111,9 +111,11 @@ func get_movement() -> Vector2:
 remotesync func init_charge():
     charge =  true
     $ParticlesCharge.emitting = true
-    yield(get_tree().create_timer(2.8), "timeout")
+    yield(get_tree().create_timer(2.5), "timeout")
     $ParticlesBoost.emitting = true    
     charge =  false
+    
+    yield(get_tree().create_timer(0.3), "timeout")
     speed = boost_speed
 
 func _unhandled_input(event: InputEvent) -> void:
