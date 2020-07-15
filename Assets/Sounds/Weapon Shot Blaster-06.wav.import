@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Weapon Shot Blaster-06.wav-e489e8a1b0165f73364eaaa7952ea80d.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Weapon Shot Blaster-06.wav"
+dest_files=[ "res://.import/Weapon Shot Blaster-06.wav-e489e8a1b0165f73364eaaa7952ea80d.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

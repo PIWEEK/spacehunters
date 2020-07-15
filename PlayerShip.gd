@@ -38,6 +38,8 @@ func _ready() -> void:
         self.add_child(camera)
         
     self.rotation = get_dir()
+    
+    Input.set_mouse_mode((Input.MOUSE_MODE_HIDDEN))
         
 func _process(delta: float) -> void:     
     if charge:
@@ -51,7 +53,12 @@ func _process(delta: float) -> void:
             can_fire = true
             
     elif laser.is_casting != fire_secondary_weapon:
-        laser.is_casting = fire_secondary_weapon    
+        laser.is_casting = fire_secondary_weapon
+        
+    if Input.is_action_just_pressed("left_mouse"):
+        $Weapon1Sound.play()
+    elif Input.is_action_just_pressed("right_mouse"):
+        $Weapon2Sound.play() 
     
 func get_dir():
     return self.get_angle_to(get_global_mouse_position())

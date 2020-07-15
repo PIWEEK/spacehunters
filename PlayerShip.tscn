@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://PlayerShip.gd" type="Script" id=1]
 [ext_resource path="res://Assets/topdown-player.svg" type="Texture" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://Trail2D.gd" type="Script" id=5]
 [ext_resource path="res://Assets/Energy.png" type="Texture" id=6]
 [ext_resource path="res://Assets/ShieldEnergy.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Sounds/Weapon Shot Blaster-06.wav" type="AudioStream" id=8]
+[ext_resource path="res://Assets/Sounds/Weapon Shot Spaceship Super Blaster-04.wav" type="AudioStream" id=9]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 34.0609
@@ -135,8 +137,8 @@ end_cap_mode = 2
 script = ExtResource( 5 )
 is_emitting = true
 resolution = 5.0
-lifetime = 0.7
 max_points = 100
+lifetime = 0.7
 target_path = NodePath("..")
 
 [node name="Shield" type="Particles2D" parent="."]
@@ -147,4 +149,10 @@ preprocess = 1.0
 randomness = 1.0
 process_material = SubResource( 9 )
 texture = ExtResource( 7 )
+
+[node name="Weapon1Sound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 8 )
+
+[node name="Weapon2Sound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 9 )
 [connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]

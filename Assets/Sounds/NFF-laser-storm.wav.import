@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/NFF-laser-storm.wav-80d51a6678b1ef10609bbd422b56b895.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/NFF-laser-storm.wav"
+dest_files=[ "res://.import/NFF-laser-storm.wav-80d51a6678b1ef10609bbd422b56b895.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
