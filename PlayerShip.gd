@@ -4,6 +4,7 @@ onready var laser := $LaserBeam2D
 onready var network = get_node("/root/Network")
 var default_speed = 400
 var shake_amount = 6.0
+var has_boost = false
 
 var last_direction
 var speed = default_speed
@@ -58,7 +59,7 @@ func _physics_process(delta: float) -> void:
     var movement = get_movement();
     
     if is_network_master():   
-        if speed > default_speed:
+        if _high_speed():
             if speed > boost_speed - 500:
                 camera.set_offset(Vector2(
                     rand_range(-1.0, 1.0) * shake_amount,
@@ -95,11 +96,11 @@ func _physics_process(delta: float) -> void:
     else:
         queue_free()
             
-    if Input.get_action_strength("ui_down") && speed > default_speed:
+    if Input.get_action_strength("ui_down") && _high_speed():
         speed = default_speed
     
 func get_movement() -> Vector2:
-    if speed > default_speed:
+    if(_high_speed()):
         return Vector2(cos(self.rotation), sin(self.rotation))
         
     return Vector2(
@@ -131,7 +132,7 @@ func _unhandled_input(event: InputEvent) -> void:
 remotesync func plasma_shot():
     var projectile = plasma.instance()
     
-    if speed > default_speed:
+    if _high_speed():
         projectile.speed = (speed - default_speed) + projectile.default_speed
     
     projectile.global_position = $InitProjectile.global_position
@@ -141,18 +142,21 @@ remotesync func plasma_shot():
 
 func init(nickname, start_position):
     global_position = start_position
+    
+func _high_speed():
+    return speed > default_speed
 
 func _on_ShipTrail_timeout():
-    # TODO: just if PlayerShip is moving
-    var move_vector = get_movement()
-    if (move_vector.x != 0 || move_vector.y != 0):
-        # first make a copy of ghost object
-        var ghost = preload("res://GhostTrail.tscn").instance()
-        # give the ghost a parent
-        get_parent().add_child(ghost)
-        ghost.position = position
-        var _scale = Vector2(.7, .7)
-        ghost.set_scale(_scale)
-        ghost.modulate.a = 0.3
-        var dir = ghost.get_angle_to( get_global_mouse_position())+90 # TODO: fix
-        ghost.rotation += dir
+    if (_high_speed()):
+        var move_vector = get_movement()
+        if (move_vector.x != 0 || move_vector.y != 0):
+            # first make a copy of ghost object
+            var ghost = preload("res://GhostTrail.tscn").instance()
+            # give the ghost a parent
+            get_parent().add_child(ghost)
+            ghost.position = position
+            var _scale = Vector2(.7, .7)
+            ghost.set_scale(_scale)
+            ghost.modulate.a = 0.5
+            var dir = ghost.get_angle_to( get_global_mouse_position())+90 # TODO: fix
+            ghost.rotation += dir

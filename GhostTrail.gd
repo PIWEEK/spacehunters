@@ -1,6 +1,6 @@
 extends Sprite
 
-const TIMER = 0.5 # seconds
+const TRAIL_DURATION = 0.5 # seconds
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -12,7 +12,7 @@ func _fade_ship_timer():
     var _timer = Timer.new()
     add_child(_timer)
     _timer.connect("timeout", self, "_on_Timer_timeout")
-    _timer.set_wait_time(TIMER)
+    _timer.set_wait_time(TRAIL_DURATION)
     _timer.set_one_shot(false) # Make sure it loops
     _timer.start()
 

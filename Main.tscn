@@ -21,16 +21,13 @@ environment = ExtResource( 5 )
 [node name="Limit" parent="." instance=ExtResource( 2 )]
 scale = Vector2( 3, 3 )
 
+[node name="ShieldHulkBar" parent="." instance=ExtResource( 7 )]
+visible = false
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Minimap" parent="CanvasLayer" instance=ExtResource( 1 )]
 position = Vector2( 1749.32, 173.027 )
-
-[node name="ShieldHulkBar" parent="CanvasLayer" instance=ExtResource( 7 )]
-margin_left = 32.0
-margin_top = 32.0
-margin_right = -1646.0
-margin_bottom = -974.0
 
 [node name="Line2D" type="Line2D" parent="."]
 visible = false
