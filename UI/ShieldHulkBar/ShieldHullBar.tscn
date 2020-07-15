@@ -1,26 +1,28 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://UI/ShieldHulkBar/ShieldHullBar.gd" type="Script" id=1]
-[ext_resource path="res://Assets/shield_bar_progress.svg" type="Texture" id=2]
+[ext_resource path="res://Assets/shield_bar_progress_2.svg" type="Texture" id=2]
+[ext_resource path="res://Assets/hull_bar_under.svg" type="Texture" id=3]
+[ext_resource path="res://Assets/hull_bar_progress.svg" type="Texture" id=5]
 
 [node name="ShieldHullBar" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = -188.9
+margin_top = 76.6236
+margin_right = -188.9
+margin_bottom = 76.6237
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ShieldBar" type="TextureProgress" parent="."]
-margin_right = 1858.0
-margin_bottom = 175.0
+margin_right = 225.0
+margin_bottom = 70.0
 value = 5.0
 texture_progress = ExtResource( 2 )
-nine_patch_stretch = true
-stretch_margin_left = 37
-stretch_margin_top = 10
-stretch_margin_right = 46
-stretch_margin_bottom = 23
+tint_progress = Color( 0.121569, 0.756863, 0.788235, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -30,12 +32,14 @@ __meta__ = {
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ShieldBar"]
 
 [node name="HullBar" type="TextureProgress" parent="."]
-margin_top = 185.0
-margin_right = 1858.0
-margin_bottom = 356.0
+margin_left = 10.0
+margin_top = 13.0
+margin_right = 214.0
+margin_bottom = 58.0
 value = 5.0
-texture_progress = ExtResource( 2 )
-nine_patch_stretch = true
+texture_under = ExtResource( 3 )
+texture_progress = ExtResource( 5 )
+tint_progress = Color( 0.678431, 0.866667, 0.262745, 1 )
 stretch_margin_left = 37
 stretch_margin_top = 10
 stretch_margin_right = 46
