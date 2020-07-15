@@ -11,6 +11,8 @@ onready var tween := $Tween
 onready var sprite := $Sprite
 onready var animation := $AnimationPlayer
 
+var explosion = preload('res://Explosion/Explosion.tscn')
+
 export var emission_color: Gradient = Gradient.new() setget _set_gradient
 
 var rnd = RandomNumberGenerator.new()
@@ -100,8 +102,11 @@ func shoot():
     if shoot_received == 5:
         animation.play("Explosion")
     
-        yield(get_tree().create_timer(5000), 'timeout')
-        self.delete()
+        yield(get_tree().create_timer(1.6), 'timeout')
+        self.add_child(explosion.instance())
+        
+        yield(get_tree().create_timer(3), 'timeout')
+        # self.delete()
         
         
         
