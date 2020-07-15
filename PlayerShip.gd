@@ -5,6 +5,9 @@ const HYPERJUMP_TRAIL_ACTIVE = true
 onready var laser := $LaserBeam2D
 onready var network = get_node("/root/Network")
 onready var shield_node := $Shield
+onready var RESPAWAN = $'/root/Main/CanvasLayer/Respawn'
+onready var Trail := $Trail2D
+
 var default_speed = 400
 var shake_amount = 6.0
 var has_boost = false
@@ -54,15 +57,16 @@ puppet func test3():
 func _process(delta: float) -> void:
     if Input.is_action_pressed("charge"):
         $Hyperjump.play()
-    elif Input.is_action_just_pressed("left_mouse"):
-        $Weapon1Sound.play()
-    elif Input.is_action_just_pressed("right_mouse"):
-        $Weapon2Sound.play()
-    elif Input.is_action_just_released("right_mouse"):
-        $Weapon2Sound.stop()
-
-    if charge:
+        
+    if charge || die:
         return
+        
+    if Input.is_action_just_pressed("fire_weapon"):
+        $Weapon1Sound.play()
+    elif Input.is_action_just_pressed("fire_secondary_weapon"):
+        $Weapon2Sound.play()
+    elif Input.is_action_just_released("fire_secondary_weapon"):
+        $Weapon2Sound.stop()
 
     if is_network_master():
         if Input.is_action_pressed("fire_weapon") && not Input.is_action_pressed("fire_secondary_weapon") && can_fire:
@@ -74,16 +78,16 @@ func _process(delta: float) -> void:
             yield(get_tree().create_timer(fire_rate), 'timeout')
             can_fire = true
 
-    if Input.is_action_just_pressed("left_mouse"):
+    if Input.is_action_just_pressed("fire_weapon"):
         $Weapon1Sound.play()
-    elif Input.is_action_just_pressed("right_mouse"):
+    elif Input.is_action_just_pressed("fire_secondary_weapon"):
         $Weapon2Sound.play()
 
 func get_dir():
     return self.get_angle_to(get_global_mouse_position())
 
 func _physics_process(delta: float) -> void:
-    if charge:
+    if charge || die:
         return
 
     var dir = get_dir()
@@ -249,7 +253,33 @@ func damage(amount):
 
     if hull <= 0 && !die:
         die = true
-        self.add_child(explosion.instance())
+        var explosion_instance = explosion.instance()
+        self.add_child(explosion_instance)
+        $Sprite.visible = false
         $CollisionShape2D.disabled = true
-        yield(get_tree().create_timer(3), 'timeout')
-        self.visible = false
+        
+        Trail.is_emitting = false
+        yield(get_tree().create_timer(2), 'timeout')
+        if is_network_master():
+            RESPAWAN.init()
+        yield(get_tree().create_timer(RESPAWAN.init_time), 'timeout')
+        
+        global_position.x = Global._random_between(-2000, 2000)
+        global_position.y = Global._random_between(-2000, 2000)
+            
+        $Sprite.visible = true
+        $CollisionShape2D.disabled = false   
+        die = false   
+        hull = 300
+        shield = 100
+        
+        ui._on_damage_shield(shield)
+        ui._on_damage_hull(hull)
+        shield_node.visible = true
+        self.remove_child(explosion_instance)
+        
+        yield(get_tree().create_timer(1), 'timeout')
+        Trail.is_emitting = true      
+        
+        
+        
