@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Minimap.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Limit.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Assets/2d_environment.tres" type="Environment" id=5]
 [ext_resource path="res://Main.gd" type="Script" id=6]
 [ext_resource path="res://UI/ShieldHulkBar/ShieldHullBar.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Assets/planets.svg" type="Texture" id=8]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 6 )
@@ -15,10 +16,41 @@ script = ExtResource( 6 )
 
 [node name="StarFieldBackground" parent="." instance=ExtResource( 3 )]
 
+[node name="ParallaxPlanets" type="ParallaxLayer" parent="StarFieldBackground"]
+motion_scale = Vector2( 0.2, 0.2 )
+motion_mirroring = Vector2( 3328, 0 )
+
+[node name="Earth" type="Sprite" parent="StarFieldBackground/ParallaxPlanets"]
+position = Vector2( 438.735, 201.142 )
+texture = ExtResource( 8 )
+region_enabled = true
+region_rect = Rect2( 30, 10, 370, 380 )
+
+[node name="Neptune" type="Sprite" parent="StarFieldBackground/ParallaxPlanets"]
+position = Vector2( 908.746, 589.733 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
+region_enabled = true
+region_rect = Rect2( 610, 30, 380, 330 )
+
+[node name="Neptune2" type="Sprite" parent="StarFieldBackground/ParallaxPlanets"]
+position = Vector2( -104.731, -701.46 )
+texture = ExtResource( 8 )
+region_enabled = true
+region_rect = Rect2( 610, 30, 380, 330 )
+
+[node name="Saturn" type="Sprite" parent="StarFieldBackground/ParallaxPlanets"]
+position = Vector2( 2269.76, 236.327 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 8 )
+region_enabled = true
+region_rect = Rect2( 130, 470, 760, 380 )
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource( 5 )
 
 [node name="Limit" parent="." instance=ExtResource( 2 )]
+position = Vector2( -89.7969, 0 )
 scale = Vector2( 3, 3 )
 
 [node name="ShieldHulkBar" parent="." instance=ExtResource( 7 )]
