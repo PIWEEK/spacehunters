@@ -19,7 +19,7 @@ var rnd = RandomNumberGenerator.new()
 var velocity = Vector2()
 var shoot_received = 0
 
-export var id = 0;
+var id = 0;
 
 var destroying = false
 
@@ -79,8 +79,14 @@ func dissolve_color(value: float) -> void:
     sprite.material.set_shader_param("burn_color", emission_color.interpolate(value))
 
 func delete():
-    Network.erase_asteroid(self.get_instance_id())
-    queue_free()
+    rpc("remove_asteroid", self.id)
+        
+master func remove_asteroid(to_remove):
+    print(self.id, to_remove)
+    
+    if self.id == to_remove:
+        Network.erase_asteroid(self.id)
+        queue_free()
 
 func disolve():
     if not destroying:

@@ -213,7 +213,6 @@ func _high_speed():
 
 func _on_ShipTrail_timeout():
     if (_high_speed() and HYPERJUMP_TRAIL_ACTIVE):
-        print('inicio ', self.get_instance_id())
         var move_vector = get_movement()
         if (move_vector.x != 0 || move_vector.y != 0):
             # first make a copy of ghost object
@@ -237,7 +236,6 @@ func damage(amount):
             ui._on_damage_shield(shield)
 
     if shield <= 0 && hull > 0:
-        print('hide shield')
         shield_node.visible = false
 
         if shield < 0:

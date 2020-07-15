@@ -1,6 +1,6 @@
 extends Node2D
 
-const ASTEROIDS_NUM = 2
+const ASTEROIDS_NUM = 20
 const MOVING_ASTEROID = preload("res://Objects/MovingAsteroid.tscn")
 const TIMER = 30.0 # seconds
 
@@ -9,7 +9,7 @@ puppet var remote_asteroids = {}
 var _timer = null
 
 func _ready():
-    if is_network_master(): 
+    if is_network_master():
         _spawn_asteroids()
     # _spawn_asteroids_periodically()
     
@@ -26,6 +26,7 @@ func _spawn_asteroids():
         # create a new instance of an asteroid scene
         var asteroid = MOVING_ASTEROID.instance()
         # add it as a child of this "universe"-node       
+        asteroid.id = asteroid.get_instance_id()
         add_child(asteroid)
         
 func _process(delta: float) -> void:
@@ -36,17 +37,24 @@ func _process(delta: float) -> void:
         
         var asteroids = self.get_children()
         
-        for asteroid_id in remote_asteroids:
+        for asteroid_id in Network.asteroids:
             var asteroid = find_asteroid_by_id(asteroids, asteroid_id)
             
             if asteroid == null:
                 var new_asteroid = MOVING_ASTEROID.instance()
                 new_asteroid.name = str(asteroid_id)
                 new_asteroid.id = asteroid_id
-                new_asteroid.remote_update(remote_asteroids[asteroid_id])
+                new_asteroid.remote_update(Network.asteroids[asteroid_id])
                 add_child(new_asteroid)             
             else:
-                asteroid.remote_update(remote_asteroids[asteroid_id])
+                asteroid.remote_update(Network.asteroids[asteroid_id])
+                
+        remove_unused_asteroids(asteroids)
+        
+func remove_unused_asteroids(asteroids):
+    for child in asteroids:
+        if not Network.asteroids.has(child.id):
+            child.queue_free()
         
 func find_asteroid_by_id(asteroids, id):
     for child in asteroids:
