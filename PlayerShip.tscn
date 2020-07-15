@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://PlayerShip.gd" type="Script" id=1]
 [ext_resource path="res://Assets/topdown-player.svg" type="Texture" id=2]
 [ext_resource path="res://LaserBeam/LaserBeam.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/cloud1.png" type="Texture" id=4]
+[ext_resource path="res://Assets/ShieldEnergy.png" type="Texture" id=5]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 34.0609
@@ -32,6 +33,22 @@ color_ramp = SubResource( 3 )
 offsets = PoolRealArray( 0, 0, 0.152, 0.768 )
 colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0, 0.235294, 0.717647, 0.905882, 1, 0.866667, 0.890196, 0.176471, 1 )
 
+[sub_resource type="Curve" id=7]
+_data = [ Vector2( 0.0454545, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.10101, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=8]
+curve = SubResource( 7 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+angular_velocity = 300.0
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.17
+scale_curve = SubResource( 8 )
+
 [node name="PlayerShip" type="KinematicBody2D"]
 position = Vector2( 188.09, 295.571 )
 script = ExtResource( 1 )
@@ -46,6 +63,7 @@ scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( -4.75655, -0.237823 )
 shape = SubResource( 1 )
 
@@ -86,4 +104,13 @@ color_ramp = SubResource( 5 )
 [node name="ShipTrail" type="Timer" parent="."]
 wait_time = 0.1
 autostart = true
+
+[node name="Particles2D" type="Particles2D" parent="."]
+position = Vector2( -5, 0 )
+amount = 5
+lifetime = 10.0
+preprocess = 1.0
+randomness = 1.0
+process_material = SubResource( 6 )
+texture = ExtResource( 5 )
 [connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]
