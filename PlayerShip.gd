@@ -42,7 +42,9 @@ func _ready() -> void:
     Input.set_mouse_mode((Input.MOUSE_MODE_HIDDEN))
         
 func _process(delta: float) -> void:     
-    if Input.is_action_just_pressed("left_mouse"):
+    if Input.is_action_pressed("charge"):
+        $Hyperjump.play()
+    elif Input.is_action_just_pressed("left_mouse"):
         $Weapon1Sound.play()
     elif Input.is_action_just_pressed("right_mouse"):
         $Weapon2Sound.play()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://PlayerShip.gd" type="Script" id=1]
 [ext_resource path="res://Assets/topdown-player.svg" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Assets/ShieldEnergy.png" type="Texture" id=7]
 [ext_resource path="res://Assets/Sounds/Weapon Shot Blaster-06.wav" type="AudioStream" id=8]
 [ext_resource path="res://Assets/Sounds/laser-ray_M1T0DY4O_WM.wav" type="AudioStream" id=9]
+[ext_resource path="res://Assets/Sounds/hyperjump.wav" type="AudioStream" id=10]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 34.0609
@@ -153,4 +154,8 @@ stream = ExtResource( 8 )
 
 [node name="Weapon2Sound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 9 )
+
+[node name="Hyperjump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+pitch_scale = 1.35
 [connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]
