@@ -141,14 +141,16 @@ func init(nickname, start_position):
     global_position = start_position
 
 func _on_ShipTrail_timeout():
-    # first make a copy of ghost object
-    var ghost = preload("res://GhostTrail.tscn").instance()
-    # give the ghost a parent
-    get_parent().add_child(ghost)
-    ghost.position = position
-    # ghost.rotation = get_dir()
-    var _scale = Vector2(.7, .7)
-    ghost.set_scale(_scale)
-    ghost.modulate.a = 0.3
-    var dir = ghost.get_angle_to( get_global_mouse_position())+90 # TODO: fix
-    ghost.rotation += dir
+    # TODO: just if PlayerShip is moving
+    var move_vector = get_movement()
+    if (move_vector.x != 0 || move_vector.y != 0):
+        # first make a copy of ghost object
+        var ghost = preload("res://GhostTrail.tscn").instance()
+        # give the ghost a parent
+        get_parent().add_child(ghost)
+        ghost.position = position
+        var _scale = Vector2(.7, .7)
+        ghost.set_scale(_scale)
+        ghost.modulate.a = 0.3
+        var dir = ghost.get_angle_to( get_global_mouse_position())+90 # TODO: fix
+        ghost.rotation += dir
