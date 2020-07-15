@@ -15,7 +15,7 @@ func _ready() -> void:
 
 func _create_pressed():
     global.is_server = true
-    network.create_server('admin')
+    network.create_server(username.text)
     start_game()
     
 func _join_pressed():
