@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://PlayerShip.gd" type="Script" id=1]
 [ext_resource path="res://Assets/topdown-player.svg" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Assets/Explosion.png" type="Texture" id=4]
 [ext_resource path="res://Trail2D.gd" type="Script" id=5]
 [ext_resource path="res://Assets/Energy.png" type="Texture" id=6]
+[ext_resource path="res://Assets/ShieldEnergy.png" type="Texture" id=7]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 34.0609
@@ -32,18 +33,27 @@ scale = 0.05
 color_ramp = SubResource( 3 )
 hue_variation = -1.0
 
-[sub_resource type="Curve" id=8]
+[sub_resource type="Curve" id=5]
 _data = [ Vector2( 0, 0.972727 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.672727 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="Gradient" id=5]
+[sub_resource type="Gradient" id=6]
 offsets = PoolRealArray( 0, 0, 0.152, 0.768 )
 colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0, 0.235294, 0.717647, 0.905882, 1, 0.866667, 0.890196, 0.176471, 1 )
 
-[sub_resource type="Curve" id=6]
+[sub_resource type="Curve" id=7]
 _data = [ Vector2( 0, 0 ), 0.0, 1.02582, 0, 0, Vector2( 1, 1 ), 1.12082, 0.0, 0, 0 ]
 
-[sub_resource type="Gradient" id=7]
+[sub_resource type="Gradient" id=8]
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1 )
+
+[sub_resource type="ParticlesMaterial" id=9]
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+angular_velocity = 300.0
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.17
 
 [node name="PlayerShip" type="KinematicBody2D"]
 position = Vector2( 188.09, 295.571 )
@@ -97,8 +107,8 @@ gravity = Vector2( 0, 0 )
 angular_velocity = 720.0
 linear_accel = 1.0
 scale_amount = 0.06
-scale_amount_curve = SubResource( 8 )
-color_ramp = SubResource( 5 )
+scale_amount_curve = SubResource( 5 )
+color_ramp = SubResource( 6 )
 
 [node name="ShipTrail" type="Timer" parent="."]
 wait_time = 0.1
@@ -114,9 +124,9 @@ scale = Vector2( 0.8, 0.8 )
 z_index = -1
 points = PoolVector2Array( -80.0847, 0.705231, -20.1493, 0.182068 )
 width = 45.0
-width_curve = SubResource( 6 )
+width_curve = SubResource( 7 )
 default_color = Color( 0.996078, 0.996078, 0.996078, 1 )
-gradient = SubResource( 7 )
+gradient = SubResource( 8 )
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
@@ -124,4 +134,13 @@ script = ExtResource( 5 )
 is_emitting = true
 lifetime = 0.7
 target_path = NodePath("..")
+
+[node name="Particles2D" type="Particles2D" parent="."]
+position = Vector2( -4, 0 )
+amount = 5
+lifetime = 10.0
+preprocess = 1.0
+randomness = 1.0
+process_material = SubResource( 9 )
+texture = ExtResource( 7 )
 [connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]
