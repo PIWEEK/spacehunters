@@ -46,6 +46,10 @@ func cast_beam() -> void:
     collision_particles.emitting = is_colliding()
 
     if is_colliding():
+        var collider = get_collider()
+        
+        if collider.is_in_group('asteroid'):
+            collider.disolve()
         cast_point = to_local(get_collision_point())
         collision_particles.global_rotation = get_collision_normal().angle()
         collision_particles.position = cast_point

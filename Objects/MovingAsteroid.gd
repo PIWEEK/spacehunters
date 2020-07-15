@@ -7,13 +7,21 @@ const MAX_VELOCITY = 100 #20
 const ROTATION_DEGREES = 4
 const MIN_SCALE_FACTOR = 0.7
 const MAX_SCALE_FACTOR = 1.3
+onready var tween := $Tween
+onready var sprite := $Sprite
+
+export var emission_color: Gradient = Gradient.new() setget _set_gradient
 
 var rnd = RandomNumberGenerator.new()
 var velocity = Vector2()
 
 export var id = 0;
 
+var destroying = false
+
 func _ready():
+    sprite.material = sprite.material.duplicate()
+    
     if is_network_master(): 
         set_rotation_degrees(_random_between(0, 360))
         _set_random_velocity()
@@ -51,4 +59,29 @@ func remote_update(update):
     set_scale(update.scale)
     position = update.position
     rotation_degrees = update.rotation_degrees
+
+func _set_gradient(value: Gradient) -> void:
+    emission_color = value
+
+func dissolve_amount(value: float) -> void:
+    sprite.material.set_shader_param("dissolve_amount", value)
+
+func dissolve_color(value: float) -> void:
+    sprite.material.set_shader_param("burn_color", emission_color.interpolate(value))
+
+func disolve():
+    if not destroying:
+        destroying = true
+        tween.interpolate_method(
+            self, "dissolve_amount", 0, 1, 2.0, Tween.TRANS_LINEAR, Tween.EASE_OUT
+        )
+        tween.interpolate_method(
+            self, "dissolve_color", 0, 1, 2.0, Tween.TRANS_LINEAR, Tween.EASE_OUT
+        )
+        tween.start()
+        yield(tween, "tween_all_completed")
+        
+        Network.erase_asteroid(self.get_instance_id())
+        queue_free()
+    
     

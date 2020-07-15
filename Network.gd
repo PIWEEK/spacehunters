@@ -69,5 +69,8 @@ remote func _send_player_info(id, info):
 func update_position(id, position):
     players[id].position = position
     
+func erase_asteroid(id):
+    asteroids.erase(id)
+    
 func update_asteroid(id, position, rotation_degrees, scale):
     asteroids[id] = { position = position, rotation_degrees = rotation_degrees, scale = scale }
