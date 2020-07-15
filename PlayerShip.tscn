@@ -8,7 +8,7 @@
 [ext_resource path="res://Assets/Energy.png" type="Texture" id=6]
 [ext_resource path="res://Assets/ShieldEnergy.png" type="Texture" id=7]
 [ext_resource path="res://Assets/Sounds/Weapon Shot Blaster-06.wav" type="AudioStream" id=8]
-[ext_resource path="res://Assets/Sounds/Weapon Shot Spaceship Super Blaster-04.wav" type="AudioStream" id=9]
+[ext_resource path="res://Assets/Sounds/laser-ray_M1T0DY4O_WM.wav" type="AudioStream" id=9]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 34.0609
@@ -136,8 +136,6 @@ begin_cap_mode = 2
 end_cap_mode = 2
 script = ExtResource( 5 )
 is_emitting = true
-resolution = 5.0
-max_points = 100
 lifetime = 0.7
 target_path = NodePath("..")
 

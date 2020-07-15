@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/gizmo_alarm_loop_001.wav-bdca8f9dc9cb1cf0b2048078907904ed.sample"
+
+[deps]
+
+source_file="res://Assets/gizmo_alarm_loop_001.wav"
+dest_files=[ "res://.import/gizmo_alarm_loop_001.wav-bdca8f9dc9cb1cf0b2048078907904ed.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
