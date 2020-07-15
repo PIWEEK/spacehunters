@@ -29,6 +29,12 @@ visible = false
 [node name="Minimap" parent="CanvasLayer" instance=ExtResource( 1 )]
 position = Vector2( 1749.32, 173.027 )
 
+[node name="ShieldHullBar" parent="CanvasLayer" instance=ExtResource( 7 )]
+margin_left = 32.0
+margin_top = 32.0
+margin_right = -1646.0
+margin_bottom = -974.0
+
 [node name="Line2D" type="Line2D" parent="."]
 visible = false
 points = PoolVector2Array( -3000.06, -0.231659, 3003.06, -0.231659 )

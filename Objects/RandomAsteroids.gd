@@ -1,6 +1,6 @@
 extends Node2D
 
-const ASTEROIDS_NUM = 40
+const ASTEROIDS_NUM = 2
 const MOVING_ASTEROID = preload("res://Objects/MovingAsteroid.tscn")
 const TIMER = 30.0 # seconds
 

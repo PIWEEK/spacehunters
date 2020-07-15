@@ -93,7 +93,6 @@ func disolve():
         )
         tween.start()
         yield(tween, "tween_all_completed")
-        
         self.delete()
     
 func shoot(): 
@@ -104,9 +103,8 @@ func shoot():
     
         yield(get_tree().create_timer(1.6), 'timeout')
         self.add_child(explosion.instance())
-        
         yield(get_tree().create_timer(3), 'timeout')
-        # self.delete()
+        self.delete()
         
         
         
