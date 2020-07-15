@@ -44,7 +44,7 @@ func _process(delta):
 func _physics_process(delta):
     if is_network_master(): 
         move_and_collide(velocity * delta)
-        Network.update_asteroid(self.get_instance_id(), position, rotation_degrees, get_scale())
+        Network.update_asteroid(self.id, position, rotation_degrees, get_scale())
 
 func _set_random_position():
     global_position.x = _random_between(-MAX_POSITION, MAX_POSITION)
@@ -82,10 +82,9 @@ func delete():
     rpc("remove_asteroid", self.id)
         
 master func remove_asteroid(to_remove):
-    print(self.id, to_remove)
-    
     if self.id == to_remove:
         Network.erase_asteroid(self.id)
+        set_physics_process(false)
         queue_free()
 
 func disolve():
@@ -111,6 +110,3 @@ func shoot():
         self.add_child(explosion.instance())
         yield(get_tree().create_timer(3), 'timeout')
         self.delete()
-        
-        
-        

@@ -33,8 +33,8 @@ func _process(delta: float) -> void:
     if is_network_master(): 
         rset_unreliable("remote_asteroids", Network.asteroids)
     else:
-        Network.asteroids = remote_asteroids
-        
+        Network.asteroids = remote_asteroids.duplicate()
+
         var asteroids = self.get_children()
         
         for asteroid_id in Network.asteroids:
