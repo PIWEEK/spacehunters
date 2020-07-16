@@ -15,6 +15,7 @@ var default_speed = 500
 var shake_amount = 6.0
 var has_boost = false
 
+var color;
 var last_direction
 var speed = default_speed
 var turn_speed = deg2rad(5)
@@ -29,25 +30,26 @@ var shield = Global.PLAYER_SHIELD
 var die = false
 var explosion_instance
 var colors = [
-    'ff1744',
-    'd500f9',
-    '00b0ff',
-    '1de9b6',
-    'c6ff00',
-    'ffea00',
-    'ff9100',
-    'ff3d00',
-    'ef9a9a',
-    '7986cb',
-    '80deea',
-    '80cbc4',
-    'e6ee9c',
-    'ffcc80',
-    'fff59d',
     'ffab91',
+    '1de9b6', 
+    'ce93d8', 
+    '7986cb', 
+    'ffcc80',
+    '00b0ff', 
+    'ff9100', 
+    'ef9a9a', 
+    'fff59d',
+    'bcaaa4',
+    'ff3d00', 
+    'eeff41', 
+    '80deea', 
+    '80cbc4', 
+    'e6ee9c', 
+    'ff5252', 
+    'e040fb', 
+    'ffd600', 
     'eeeeee',
-    '26418f', # bad
-    'ce93d8', # bad
+
 ]
 
 puppet var puppet_position = Vector2()
@@ -85,7 +87,7 @@ func _process(delta: float) -> void:
         if Input.is_action_pressed("fire_weapon") && not Input.is_action_pressed("fire_secondary_weapon") && can_fire:
             rpc("plasma_shot", {
                 rotation = rotation,
-                position = position
+                position = position,
             })
             can_fire = false
             yield(get_tree().create_timer(fire_rate), 'timeout')
@@ -245,7 +247,7 @@ func _unhandled_input(event: InputEvent) -> void:
         rpc("fire_secondary_weapon", {
             plasma = event.is_action_pressed("fire_secondary_weapon"),
             rotation = rotation,
-            position = position
+            position = position,
         })
 
 remotesync func fire_secondary_weapon(data):
@@ -280,11 +282,14 @@ remotesync func plasma_shot(data):
     $'/root/Main'.add_child(projectile)
 
 func init(player_info):
-    var color = colors[player_info.num]
+    color = colors[player_info.num]
     
     $Sprite.modulate = color
     $Trail2D.modulate = color
     $LaserBeam2D.modulate = color
+    $LaserBeam2D/BeamParticles2D.modulate = color
+    $LaserBeam2D/CastingParticles2D.modulate = color
+    $LaserBeam2D/CollisionParticles2D.modulate = color
     $Shield.modulate = color
     
     $LaserBeam2D/CastingParticles2D.modulate = color
