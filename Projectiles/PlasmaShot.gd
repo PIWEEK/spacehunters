@@ -26,8 +26,7 @@ func _physics_process(delta: float) -> void:
         if collision.collider.is_in_group('asteroid'):
             collision.collider.shoot()
         elif collision.collider.is_in_group('ship'):
-            collision.collider.damage(player_owner, 20)       
-                 
+            collision.collider.damage(player_owner, 20)                      
         destroy()
 
 func destroy() -> void:

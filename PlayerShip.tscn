@@ -72,9 +72,7 @@ process_mode = 0
 smoothing_speed = 0.5
 script = ExtResource( 8 )
 
-[node name="LaserBeam2D" parent="." groups=[
-"weapon",
-] instance=ExtResource( 3 )]
+[node name="LaserBeam2D" parent="." instance=ExtResource( 3 )]
 position = Vector2( 24, 0 )
 cast_to = Vector2( 100, 0 )
 

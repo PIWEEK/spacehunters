@@ -261,6 +261,7 @@ remotesync func plasma_shot(data):
 
     projectile.global_position = $InitProjectile.global_position
     projectile.direction = Vector2(cos(self.rotation), sin(self.rotation))
+    projectile.modulate = color
 
     $'/root/Main'.add_child(projectile)
 
