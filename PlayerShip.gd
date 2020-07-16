@@ -10,7 +10,7 @@ onready var Trail := $Trail2D
 onready var Stats = $'/root/Main/CanvasLayer/Players'
 
 var weapon1_sound_file = preload('res://Assets/Sounds/Weapon Shot Blaster-06.wav')
-var default_speed = 400
+var default_speed = 500
 var shake_amount = 6.0
 var has_boost = false
 
@@ -20,10 +20,10 @@ var turn_speed = deg2rad(5)
 var plasma = preload('res://Projectiles/PlasmaShot.tscn')
 var explosion = preload('res://Explosion/Explosion.tscn')
 var can_fire = true
-var fire_rate := 0.16
+var fire_rate := 0.10
 var charge = false
 var camera
-var boost_speed = 1500
+var boost_speed = 1800
 var hull = Global.PLAYER_HULL
 var shield = Global.PLAYER_SHIELD
 var die = false
@@ -75,7 +75,7 @@ func _process(delta: float) -> void:
 func weapon1_sound():
     var audio_stream = AudioStreamPlayer2D.new()
     audio_stream.stream = weapon1_sound_file
-    audio_stream.volume_db = -10
+    audio_stream.volume_db = -15
     audio_stream.max_distance = 1500
     
     self.add_child(audio_stream)

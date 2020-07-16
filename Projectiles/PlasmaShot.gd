@@ -5,8 +5,8 @@ onready var tween := $Tween
 onready var sprite := $Sprite
 
 export var default_speed := 1000.0
-export var speed := 1250.0
-export var damage := 10.0
+export var speed := 1800.0
+export var damage := 7.0
 export var direction: Vector2
 
 # fill in instanciation

@@ -13,7 +13,7 @@ onready var collision_particles := $CollisionParticles2D
 onready var beam_particles := $BeamParticles2D
 
 onready var line_width: float = fill.width
-var damage_rate = 0.05
+var damage_rate = 0.10
 var timer = null
 var player_owner;
 
