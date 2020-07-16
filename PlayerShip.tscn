@@ -160,6 +160,7 @@ max_distance = 1500.0
 
 [node name="Hyperjump" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 10 )
+volume_db = -20.0
 pitch_scale = 1.35
 max_distance = 1500.0
 
