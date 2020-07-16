@@ -257,7 +257,8 @@ remotesync func plasma_shot(data):
 
     $'/root/Main'.add_child(projectile)
 
-func init():
+func init(player_info):
+    print(player_info.num)
     global_position.x = Global._random_between(-2000, 2000)
     global_position.y = Global._random_between(-2000, 2000)
 
