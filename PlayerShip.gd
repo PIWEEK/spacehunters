@@ -7,6 +7,7 @@ onready var network = get_node("/root/Network")
 onready var shield_node := $Shield
 onready var RESPAWAN = $'/root/Main/CanvasLayer/Respawn'
 onready var Trail := $Trail2D
+onready var Stats = $'/root/Main/CanvasLayer/Players'
 
 var weapon1_sound = preload('res://Assets/Sounds/Weapon Shot Blaster-06.wav')
 var default_speed = 400
@@ -41,7 +42,8 @@ func _ready() -> void:
         self.add_child(camera)
 
     self.rotation = get_dir()
-
+    
+    laser.player_owner = int(self.name)
     # Input.set_mouse_mode((Input.MOUSE_MODE_HIDDEN))
 
 # todos
@@ -160,7 +162,9 @@ puppet func remote_shield_down():
     shield = 0
     shield_node.visible = false
     
-puppet func remote_destroyed():
+remotesync func remote_destroyed(attacker):
+    print(attacker, ' ', int(self.name))
+    Stats.update_table(attacker, int(self.name))
     self.ship_destruction()
     
 puppet func remote_ship_resurection(new_position):
@@ -222,6 +226,8 @@ remotesync func plasma_shot(data):
         self.position = data.position
 
     var projectile = plasma.instance()
+    
+    projectile.player_owner = int(self.name)
 
     if _high_speed():
         projectile.speed = (speed - default_speed) + projectile.default_speed
@@ -274,7 +280,7 @@ func ship_resurection():
     yield(get_tree().create_timer(1), 'timeout')
     Trail.is_emitting = true    
     
-func damage(amount):
+func damage(who, amount):
     if is_network_master():
         var ui = $'/root/Main/CanvasLayer/ShieldHullBar'
     
@@ -298,10 +304,8 @@ func damage(amount):
                 rpc("remote_shield_down")                
     
         if hull <= 0 && !die:
-            rpc("remote_destroyed")
-            
-            self.ship_destruction()
-            
+            rpc("remote_destroyed", who)
+
             yield(get_tree().create_timer(2), 'timeout')
             
             if is_network_master():

@@ -15,6 +15,7 @@ onready var beam_particles := $BeamParticles2D
 onready var line_width: float = fill.width
 var damage_rate = 0.05
 var timer = null
+var player_owner;
 
 func _ready() -> void:
     set_physics_process(false)
@@ -44,7 +45,7 @@ func set_is_casting(cast: bool) -> void:
 
 func make_damage_ship(ship):
     if ship:
-        ship.damage(3)
+        ship.damage(player_owner, 3)
 
 func damage_ship(ship):
     if !timer:

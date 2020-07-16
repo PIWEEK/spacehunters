@@ -33,3 +33,14 @@ func find_item_by_id(id):
             return child
 
     return null
+
+func update_table(attacker, destroyed): 
+    var kills = find_item_by_id('kills-' + str(attacker))
+    var count_kills = int(kills.text)
+    
+    kills.text = str(count_kills + 1)
+    
+    var deaths = find_item_by_id('deaths-' + str(destroyed))
+    var count_deaths = int(deaths.text)
+    
+    deaths.text = str(count_deaths + 1)    
