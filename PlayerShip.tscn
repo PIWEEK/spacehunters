@@ -121,7 +121,6 @@ autostart = true
 rotation = -1.5708
 
 [node name="Trail2D" type="Line2D" parent="."]
-modulate = Color( 0.309804, 0.592157, 0.862745, 1 )
 position = Vector2( 0.402878, 0 )
 scale = Vector2( 0.8, 0.8 )
 z_index = -1
