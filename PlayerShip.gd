@@ -8,6 +8,7 @@ onready var shield_node := $Shield
 onready var RESPAWAN = $'/root/Main/CanvasLayer/Respawn'
 onready var Trail := $Trail2D
 onready var Stats = $'/root/Main/CanvasLayer/Players'
+onready var Wall = $'/root/Main/CanvasLayer/Wall'
 
 var weapon1_sound_file = preload('res://Assets/Sounds/Weapon Shot Blaster-06.wav')
 var default_speed = 500
@@ -189,6 +190,7 @@ puppet func remote_shield_down():
     
 remotesync func remote_destroyed(attacker):
     Stats.update_table(attacker, int(self.name))
+    Wall.report_death(attacker, int(self.name))
     self.ship_destruction()
     
 puppet func remote_ship_resurection(new_position):
