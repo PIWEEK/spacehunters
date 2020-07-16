@@ -27,10 +27,6 @@ func _ready():
     ShieldBar.value = max_shield
     HullBar.max_value = max_hull
     HullBar.value = max_hull
-
-    # Paint Numbers
-    $HullText.bbcode_text = str(hull)
-    $ShieldText.bbcode_text = str(shield)
     
 func _process(delta):
     HullBar.value = hull
@@ -58,11 +54,7 @@ func _update_hull(value_start: float, current_value: float):
         HullTween.interpolate_property(
             self, "hull", hull, 0, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
         )
-    if current_value > 0:
-        $HullText.bbcode_text = str(current_value)
-    else:
-        $HullText.bbcode_text = str(0)
-        
+
     if not HullTween.is_active():
         HullTween.start()
 
@@ -75,10 +67,6 @@ func _update_shield(value_start: float, current_value: float):
         ShieldTween.interpolate_property(
             self, "shield", shield, 0, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
         )
-    if current_value > 0:
-        $ShieldText.bbcode_text = str(current_value)
-    else:
-        $ShieldText.bbcode_text = str(0)
         
     if not ShieldTween.is_active():
         ShieldTween.start()        

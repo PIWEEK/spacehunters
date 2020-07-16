@@ -49,16 +49,3 @@ __meta__ = {
 }
 
 [node name="HullTween" type="Tween" parent="HullBar"]
-
-[node name="ShieldText" type="RichTextLabel" parent="."]
-margin_top = 384.0
-margin_right = 40.0
-margin_bottom = 424.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HullText" type="RichTextLabel" parent="."]
-margin_top = 464.0
-margin_right = 40.0
-margin_bottom = 504.0
