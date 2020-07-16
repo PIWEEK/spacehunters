@@ -28,6 +28,27 @@ var hull = Global.PLAYER_HULL
 var shield = Global.PLAYER_SHIELD
 var die = false
 var explosion_instance
+var colors = [
+    'ff1744',
+    'd500f9',
+    '00b0ff',
+    '1de9b6',
+    'c6ff00',
+    'ffea00',
+    'ff9100',
+    'ff3d00',
+    'ef9a9a',
+    '7986cb',
+    '80deea',
+    '80cbc4',
+    'e6ee9c',
+    'ffcc80',
+    'fff59d',
+    'ffab91',
+    'eeeeee',
+    '26418f', # bad
+    'ce93d8', # bad
+]
 
 puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
@@ -36,10 +57,9 @@ puppet var puppet_global_position = Vector2()
 func _ready() -> void:
     if is_network_master():
         Network.player_id = int(name)
-        camera = Camera2D.new()
-        camera.current = true
-
         self.add_child(camera)
+    else:
+        self.remove_child($PlayerCamera)
 
     self.rotation = get_dir()
     
@@ -257,7 +277,17 @@ remotesync func plasma_shot(data):
     $'/root/Main'.add_child(projectile)
 
 func init(player_info):
-    # print(player_info.num)
+    var color = colors[player_info.num]
+    
+    $Sprite.modulate = color
+    $Trail2D.modulate = color
+    $LaserBeam2D.modulate = color
+    $Shield.modulate = color
+    
+    $LaserBeam2D/CastingParticles2D.modulate = color
+    $LaserBeam2D/BeamParticles2D.modulate = color
+    $LaserBeam2D/CollisionParticles2D.modulate = color
+    
     global_position.x = Global._random_between(-2000, 2000)
     global_position.y = Global._random_between(-2000, 2000)
 

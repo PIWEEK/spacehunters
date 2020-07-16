@@ -9,6 +9,7 @@ func _ready() -> void:
     
     if get_tree().is_network_server():
         Network.create_ship(1, Network.self_data)
+        Network.player_id = 1
     
 func _input(event):
     if event.is_action_pressed("ui_cancel"):

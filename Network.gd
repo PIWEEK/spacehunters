@@ -6,10 +6,10 @@ const MAX_PLAYERS = 10
 
 var players = { }
 var asteroids = {}
-var self_data = { name = '', position = Vector2(360, 180), num = 1 }
+var self_data = { name = '', position = Vector2(360, 180), num = 0 }
 var player_id = 0
 
-var player_number = 1
+var player_number = 0
 
 var PlayerShip = preload('res://PlayerShip.tscn')
 
@@ -22,7 +22,7 @@ func _ready():
 
 func create_server(player_nickname):
     self_data.name = player_nickname
-    self_data.num = 1
+    self_data.num = 0
     self_data.position = Vector2(1, 1)
     players[1] = self_data
     var peer = NetworkedMultiplayerENet.new()
@@ -43,6 +43,7 @@ func connect_to_server(player_nickname, ip = DEFAULT_IP):
 
 func _connected_to_server():
     var local_player_id = get_tree().get_network_unique_id()
+    Network.player_id = local_player_id
     rpc_id(1, '_player_setup', local_player_id)
     
 func _on_player_disconnected(id):
