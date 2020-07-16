@@ -32,40 +32,43 @@ func _process(delta):
     HullBar.value = hull
     ShieldBar.value = shield
     
-func _on_damage_shield(new_shield):
+func _on_damage_shield(new_shield, ease_type = Tween.EASE_OUT):
+    shield = new_shield
+    
     if new_shield < 0:
-        _update_shield(shield, 0)
+        _update_shield(shield, 0, ease_type)
     else:
-        _update_shield(shield, new_shield)
+        _update_shield(shield, new_shield, ease_type)
     
         
-func _on_damage_hull(new_hull):
+func _on_damage_hull(new_hull, ease_type = Tween.EASE_OUT):
+    hull = new_hull
     if new_hull < 0:
-        _update_hull(hull, 0)
+        _update_hull(hull, 0, ease_type)
     else:
-        _update_hull(hull, new_hull)        
+        _update_hull(hull, new_hull, ease_type)        
 
-func _update_hull(value_start: float, current_value: float):
+func _update_hull(value_start: float, current_value: float, ease_type = Tween.EASE_OUT):
     if current_value > 0:
         HullTween.interpolate_property(
-            self, "hull", hull, current_value, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
+            self, "hull", hull, current_value, 0.25, Tween.TRANS_ELASTIC, ease_type
         )
     else:
         HullTween.interpolate_property(
-            self, "hull", hull, 0, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
+            self, "hull", hull, 0, 0.25, Tween.TRANS_ELASTIC, ease_type
         )
 
     if not HullTween.is_active():
         HullTween.start()
 
-func _update_shield(value_start: float, current_value: float):
+func _update_shield(value_start: float, current_value: float, ease_type = Tween.EASE_OUT):
     if current_value > 0:
         ShieldTween.interpolate_property(
-            self, "shield", shield, current_value, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
+            self, "shield", shield, current_value, 0.25, Tween.TRANS_ELASTIC, ease_type
         )
     else :
         ShieldTween.interpolate_property(
-            self, "shield", shield, 0, 0.25, Tween.TRANS_ELASTIC, Tween.EASE_OUT
+            self, "shield", shield, 0, 0.25, Tween.TRANS_ELASTIC, ease_type
         )
         
     if not ShieldTween.is_active():

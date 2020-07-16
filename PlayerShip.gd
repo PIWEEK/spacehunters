@@ -36,6 +36,9 @@ puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
 puppet var puppet_global_position = Vector2()
 
+var charge_shield_timer
+var enable_charge_shield = false
+
 func _ready() -> void:
     if is_network_master():
         Network.player_id = int(name)
@@ -43,10 +46,28 @@ func _ready() -> void:
         self.remove_child($PlayerCamera)
 
     self.rotation = get_dir()
-    
+
     laser.player_owner = int(self.name)
-    # Input.set_mouse_mode((Input.MOUSE_MODE_HIDDEN))
-    
+
+    if is_network_master():
+        var timer = Timer.new()
+        add_child(timer)
+        timer.connect("timeout", self, "_charge_shield")
+        timer.set_wait_time(0.2)
+        timer.set_one_shot(false)
+        timer.start()
+
+func _init_charge_shield():
+    enable_charge_shield = true
+
+func _charge_shield():
+    if enable_charge_shield && shield < Global.PLAYER_SHIELD:
+        shield += 2
+        if shield > Global.PLAYER_SHIELD:
+            shield = Global.PLAYER_SHIELD
+
+        # print(shield)
+        ui._on_damage_shield(shield, Tween.TRANS_LINEAR)
 
 # todos
 remote func test1():
@@ -60,10 +81,10 @@ master func test2():
 puppet func test3():
     print('test3 - puppet')
 
-func _process(delta: float) -> void:        
+func _process(delta: float) -> void:
     if charge || die:
         return
-       
+
     if is_network_master():
         if Input.is_action_pressed("fire_weapon") && not Input.is_action_pressed("fire_secondary_weapon") && can_fire:
             rpc("plasma_shot", {
@@ -79,13 +100,13 @@ func weapon1_sound():
     audio_stream.stream = weapon1_sound_file
     audio_stream.volume_db = -15
     audio_stream.max_distance = 1500
-    
+
     self.add_child(audio_stream)
-    
+
     audio_stream.connect("finished", self, "audio_weapon1_finished", [audio_stream])
     audio_stream.play()
-        
-func audio_weapon1_finished(audio_stream): 
+
+func audio_weapon1_finished(audio_stream):
     self.remove_child(audio_stream)
 
 func get_dir():
@@ -110,12 +131,12 @@ func _physics_process(delta: float) -> void:
 
             if new_speed < default_speed:
                 new_speed = default_speed
-                
+
             speed = new_speed
-            
+
             if not self._high_speed():
                 rpc('sync_speed', speed)
-                
+
         if last_direction != dir:
             if abs(dir) < turn_speed:
                 self.rotation += dir
@@ -126,7 +147,7 @@ func _physics_process(delta: float) -> void:
             rset_unreliable("puppet_direction", self.rotation)
 
         var collision = move_and_collide(movement * speed * delta)
-        
+
         if collision and not('PlasmaShot' in collision.collider.name) and not('LaserBeam2D' in collision.collider.name):
             cancel_hyper_speed()
             rpc('sync_speed', speed)
@@ -153,35 +174,35 @@ func get_movement() -> Vector2:
 
     if(_high_speed()):
         return Vector2(cos(self.rotation), sin(self.rotation))
-        
+
     if not is_network_master():
-        return Vector2(cos(self.rotation), sin(self.rotation)) 
+        return Vector2(cos(self.rotation), sin(self.rotation))
 
     return Vector2(
         Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
         Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
     )
-    
+
 func cancel_hyper_speed():
     $ParticlesCharge.emitting = false
     $ParticlesBoost.emitting = false
     speed = default_speed
     $Hyperjump.stop()
     charge =  false
-    
+
 puppet func remote_shield_down():
     shield = 0
     shield_node.visible = false
-    
+
 remotesync func remote_destroyed(attacker):
     Stats.update_table(attacker, int(self.name))
     Wall.report_death(attacker, int(self.name))
     self.ship_destruction()
-    
+
 puppet func remote_ship_resurection(new_position):
     self.position = new_position
     self.ship_resurection()
-    
+
 # called to cancel high speed in other players
 puppet func sync_speed(new_speed):
     speed = new_speed
@@ -191,31 +212,31 @@ remotesync func init_charge(data):
     if not is_network_master():
         self.rotation = data.rotation
         self.position = data.position
-        
-    $Hyperjump.play()  
+
+    $Hyperjump.play()
 
     charge =  true
     $ParticlesCharge.emitting = true
     yield(get_tree().create_timer(0.5), "timeout")
-    
+
     if die:
         return
-        
+
     $ParticlesBoost.emitting = true
     charge =  false
 
     yield(get_tree().create_timer(0.3), "timeout")
-    
+
     if die:
         return
-        
+
     speed = boost_speed
 
 
 func _unhandled_input(event: InputEvent) -> void:
     if die:
         return
-        
+
     if is_network_master():
         if event.is_action("charge"):
             if event.is_action_pressed("charge"):
@@ -236,7 +257,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 remotesync func fire_secondary_weapon(data):
     laser.is_casting = data.plasma
-    
+
     if laser.is_casting:
         $Weapon2Sound.play()
     else:
@@ -250,11 +271,11 @@ remotesync func plasma_shot(data):
     if not is_network_master():
         self.rotation = data.rotation
         self.position = data.position
-        
+
     weapon1_sound()
 
     var projectile = plasma.instance()
-    
+
     projectile.player_owner = int(self.name)
 
     if _high_speed():
@@ -268,7 +289,7 @@ remotesync func plasma_shot(data):
 
 func init(player_info):
     color = Global.colors[player_info.num]
-    
+
     $Sprite.modulate = color
     $Trail2D.modulate = color
     $LaserBeam2D.modulate = color
@@ -276,11 +297,11 @@ func init(player_info):
     $LaserBeam2D/CastingParticles2D.modulate = color
     $LaserBeam2D/CollisionParticles2D.modulate = color
     $Shield.modulate = color
-    
+
     $LaserBeam2D/CastingParticles2D.modulate = color
     $LaserBeam2D/BeamParticles2D.modulate = color
     $LaserBeam2D/CollisionParticles2D.modulate = color
-    
+
     global_position.x = Global._random_between(-2000, 2000)
     global_position.y = Global._random_between(-2000, 2000)
 
@@ -311,66 +332,77 @@ func ship_destruction():
     Trail.is_emitting = false
     cancel_hyper_speed()
     $ShipDestuctionSound.play()
-    
+
 func ship_resurection():
     self.remove_child(explosion_instance)
-    
+
     $Sprite.visible = true
-    $CollisionShape2D.disabled = false   
-    die = false   
+    $CollisionShape2D.disabled = false
+    die = false
     hull = Global.PLAYER_HULL
     shield = Global.PLAYER_SHIELD
     shield_node.visible = true
-    
+
     yield(get_tree().create_timer(1), 'timeout')
-    Trail.is_emitting = true    
-   
+    Trail.is_emitting = true
+
 func heal(amount):
     if hull + amount > Global.PLAYER_HULL:
         amount = Global.PLAYER_HULL
-    
+
     hull += amount
-        
+
     ui._on_damage_hull(hull)
-    
+
 func damage(who, amount):
     if is_network_master():
+        enable_charge_shield = false
+        if charge_shield_timer:
+            self.remove_child(charge_shield_timer)
+
+        charge_shield_timer = Timer.new()
+        add_child(charge_shield_timer)
+        charge_shield_timer.connect("timeout", self, "_init_charge_shield")
+        charge_shield_timer.set_wait_time(5)
+        charge_shield_timer.set_one_shot(true)
+        charge_shield_timer.start()
+
         if shield > 0:
             shield = shield - amount
-    
+
             ui._on_damage_shield(shield)
-    
+
         if shield <= 0 && hull > 0:
             shield_node.visible = false
-    
+
             if shield < 0:
                 hull = hull + shield
                 shield = 0
             else:
                 hull = hull - amount
-    
+
             ui._on_damage_hull(hull)
-            
+
             if shield == 0:
-                rpc("remote_shield_down")                
-    
+                rpc("remote_shield_down")
+
         if hull <= 0 && !die:
             rpc("remote_destroyed", who)
 
             yield(get_tree().create_timer(2), 'timeout')
-            
+
             if is_network_master():
                 RESPAWAN.init()
-                
-            yield(get_tree().create_timer(RESPAWAN.init_time), 'timeout')                
-            
+
+            yield(get_tree().create_timer(RESPAWAN.init_time), 'timeout')
+
             global_position.x = Global._random_between(-2000, 2000)
             global_position.y = Global._random_between(-2000, 2000)
-                
+
             self.ship_resurection()
             rpc("remote_ship_resurection", self.position)
-            
+
             ui._on_damage_shield(shield)
             ui._on_damage_hull(hull)
-        
-        
+
+
