@@ -5,6 +5,7 @@ var type = ''
 const PLAYER_TEXTURE = preload("res://Assets/player.png")
 const ASTEROID_TEXTURE = preload("res://Assets/asteroid.png")
 const ENEMY_TEXTURE = preload("res://Assets/enemy.png")
+const SHIELD_TEXTURE = preload("res://Assets/shield.png")
 
 func _process(delta: float) -> void:
     if self.type == 'player' || self.type == 'enemy':
@@ -24,6 +25,8 @@ func init(id, type):
         $Sprite.texture = ASTEROID_TEXTURE
     elif type == 'enemy':
         $Sprite.texture = ENEMY_TEXTURE        
+    elif type == 'shield':
+        $Sprite.texture = SHIELD_TEXTURE            
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float) -> void:
