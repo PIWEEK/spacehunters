@@ -153,8 +153,9 @@ stream = ExtResource( 8 )
 
 [node name="Weapon2Sound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 9 )
+volume_db = 18.0
 
 [node name="Hyperjump" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 10 )
-pitch_scale = 1.35
+pitch_scale = 1.45
 [connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]

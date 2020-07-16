@@ -5,7 +5,8 @@ onready var game_stats := $CanvasLayer/Players
 
 func _ready() -> void:    
     var selfPeerID = get_tree().get_network_unique_id()
-    create_player(selfPeerID)         
+    create_player(selfPeerID)
+    $MainSceneMusic.play()  
 
 func create_player(id):
     Network.players[get_tree().get_network_unique_id()] = Network.self_data
