@@ -20,15 +20,16 @@ var shoot_received = 0
 var id = 0;
 var destroying = false
 
-func _ready():
+func _ready(random_position = true):
     sprite.material = sprite.material.duplicate()
-    
-    if is_network_master(): 
-        set_rotation_degrees(_random_between(0, 360))
-        _set_random_velocity()
+        
+func master_init(random_position = true):
+    set_rotation_degrees(_random_between(0, 360))
+    _set_random_velocity()
+    if random_position:
         _set_random_position()
-        _set_random_size()
-    
+    _set_random_size()
+
 func _process(delta):
     if is_network_master(): 
         rotation_degrees += ROTATION_DEGREES * delta    

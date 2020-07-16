@@ -19,6 +19,21 @@ script = ExtResource( 6 )
 
 [node name="Spawn" parent="." instance=ExtResource( 4 )]
 
+[node name="AsteroidPoint1" type="Node2D" parent="." groups=[
+"asteroid_spawn_point",
+]]
+position = Vector2( 3.93689, -2952.67 )
+
+[node name="AsteroidPoint2" type="Node2D" parent="." groups=[
+"asteroid_spawn_point",
+]]
+position = Vector2( -2216.2, 2015.12 )
+
+[node name="AsteroidPoint3" type="Node2D" parent="." groups=[
+"asteroid_spawn_point",
+]]
+position = Vector2( 2854.46, 10.6022 )
+
 [node name="StarFieldBackground" parent="." instance=ExtResource( 3 )]
 
 [node name="ParallaxPlanets" type="ParallaxLayer" parent="StarFieldBackground"]
