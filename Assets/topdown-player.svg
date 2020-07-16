@@ -14,7 +14,7 @@
    viewBox="0 0 80 80"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="topdown-player.svg">
   <defs
      id="defs2" />
@@ -25,15 +25,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="-114.51448"
-     inkscape:cy="81.390178"
+     inkscape:zoom="2.8"
+     inkscape:cx="176.38576"
+     inkscape:cy="6.5575756"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1017"
+     inkscape:window-height="1027"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
@@ -61,6 +61,6 @@
        d="m 75.472461,1081.3801 c -1.4188,2.6538 -6.2076,4.644 -12.6813,5.9709 -6.4738,1.3269 -14.6325,-10.0941 -22.7912,-10.0941 -8.1586,0 -16.3172,11.421 -22.791,10.0941 -6.4737,-1.3269 -11.2625,-3.3171 -12.6814,-5.9709 -5.6757,-10.6149 24.1212,-66.3431 35.4724,-66.3431 11.3512,0 41.1481,55.7282 35.4725,66.3431 z"
        inkscape:transform-center-y="-2.0476536"
        inkscape:transform-center-x="-1.0364481"
-       style="opacity:1;fill:#4b5bab;fill-opacity:1;stroke:#4da6ff;stroke-width:7.57400036;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
+       style="opacity:1;fill:#bfbfbf;fill-opacity:1;stroke:#ffffff;stroke-width:7.57400036;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
   </g>
 </svg>

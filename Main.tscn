@@ -83,4 +83,4 @@ points = PoolVector2Array( -3000.06, -0.231659, 3003.06, -0.231659 )
 
 [node name="MainSceneMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 11 )
-volume_db = -10.0
+volume_db = -30.0

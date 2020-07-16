@@ -20,7 +20,7 @@ var turn_speed = deg2rad(5)
 var plasma = preload('res://Projectiles/PlasmaShot.tscn')
 var explosion = preload('res://Explosion/Explosion.tscn')
 var can_fire = true
-var fire_rate := 0.2
+var fire_rate := 0.16
 var charge = false
 var camera
 var boost_speed = 1500
@@ -75,6 +75,7 @@ func _process(delta: float) -> void:
 func weapon1_sound():
     var audio_stream = AudioStreamPlayer2D.new()
     audio_stream.stream = weapon1_sound_file
+    audio_stream.volume_db = -10
     audio_stream.max_distance = 1500
     
     self.add_child(audio_stream)
