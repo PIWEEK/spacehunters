@@ -155,6 +155,13 @@ func get_movement() -> Vector2:
         Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
     )
     
+func cancel_hyper_speed():
+    $ParticlesCharge.emitting = false
+    $ParticlesBoost.emitting = false
+    speed = default_speed
+    $Hyperjump.stop()
+    charge =  false
+    
 puppet func remote_shield_down():
     shield = 0
     shield_node.visible = false
@@ -172,24 +179,35 @@ puppet func remote_ship_resurection(new_position):
 puppet func sync_speed(new_speed):
     speed = new_speed
 
+
 remotesync func init_charge(data):
     if not is_network_master():
         self.rotation = data.rotation
         self.position = data.position
         
-
     $Hyperjump.play()  
 
     charge =  true
     $ParticlesCharge.emitting = true
     yield(get_tree().create_timer(2.5), "timeout")
+    
+    if die:
+        return
+        
     $ParticlesBoost.emitting = true
     charge =  false
 
     yield(get_tree().create_timer(0.3), "timeout")
+    
+    if die:
+        return
+        
     speed = boost_speed
 
 func _unhandled_input(event: InputEvent) -> void:
+    if die:
+        return
+        
     if is_network_master():
         if event.is_action("charge"):
             if event.is_action_pressed("charge"):
@@ -268,6 +286,7 @@ func ship_destruction():
     $Sprite.visible = false
     $CollisionShape2D.disabled = true
     Trail.is_emitting = false
+    cancel_hyper_speed()
     
 func ship_resurection():
     self.remove_child(explosion_instance)
