@@ -11,5 +11,5 @@ dest_files=[ "res://.import/hyperjump.ogg-f38262712e24ce522861dd055a03d63e.oggst
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
