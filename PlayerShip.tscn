@@ -149,8 +149,11 @@ texture = ExtResource( 7 )
 
 [node name="Weapon2Sound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 9 )
+volume_db = 20.0
+max_distance = 1500.0
 
-[node name="Hyperjump" type="AudioStreamPlayer" parent="."]
+[node name="Hyperjump" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 10 )
 pitch_scale = 1.35
+max_distance = 1500.0
 [connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]

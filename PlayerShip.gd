@@ -9,7 +9,7 @@ onready var RESPAWAN = $'/root/Main/CanvasLayer/Respawn'
 onready var Trail := $Trail2D
 onready var Stats = $'/root/Main/CanvasLayer/Players'
 
-var weapon1_sound = preload('res://Assets/Sounds/Weapon Shot Blaster-06.wav')
+var weapon1_sound_file = preload('res://Assets/Sounds/Weapon Shot Blaster-06.wav')
 var default_speed = 400
 var shake_amount = 6.0
 var has_boost = false
@@ -58,10 +58,7 @@ master func test2():
 puppet func test3():
     print('test3 - puppet')
 
-func _process(delta: float) -> void:
-    if is_network_master() && Input.is_action_pressed("charge"):
-        $Hyperjump.play()
-        
+func _process(delta: float) -> void:        
     if charge || die:
         return
        
@@ -74,18 +71,17 @@ func _process(delta: float) -> void:
             can_fire = false
             yield(get_tree().create_timer(fire_rate), 'timeout')
             can_fire = true
-            
-            weapon1_sound()
 
 func weapon1_sound():
     var audio_stream = AudioStreamPlayer2D.new()
-    audio_stream.stream = weapon1_sound
+    audio_stream.stream = weapon1_sound_file
+    audio_stream.max_distance = 1500
     
     self.add_child(audio_stream)
     
     audio_stream.connect("finished", self, "audio_weapon1_finished", [audio_stream])
     audio_stream.play()
-    
+        
 func audio_weapon1_finished(audio_stream): 
     self.remove_child(audio_stream)
 
@@ -179,6 +175,9 @@ remotesync func init_charge(data):
     if not is_network_master():
         self.rotation = data.rotation
         self.position = data.position
+        
+
+    $Hyperjump.play()  
 
     charge =  true
     $ParticlesCharge.emitting = true
@@ -202,11 +201,6 @@ func _unhandled_input(event: InputEvent) -> void:
         if not event.is_action("fire_secondary_weapon"):
             return
 
-        if Input.is_action_just_released("fire_secondary_weapon"):
-            $Weapon2Sound.stop()
-        else:
-            $Weapon2Sound.play()
-
         rpc("fire_secondary_weapon", {
             plasma = event.is_action_pressed("fire_secondary_weapon"),
             rotation = rotation,
@@ -215,6 +209,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 remotesync func fire_secondary_weapon(data):
     laser.is_casting = data.plasma
+    
+    if laser.is_casting:
+        $Weapon2Sound.play()
+    else:
+        $Weapon2Sound.stop()
 
     if not is_network_master():
         self.rotation = data.rotation
@@ -224,6 +223,8 @@ remotesync func plasma_shot(data):
     if not is_network_master():
         self.rotation = data.rotation
         self.position = data.position
+        
+    weapon1_sound()
 
     var projectile = plasma.instance()
     
