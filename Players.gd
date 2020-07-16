@@ -6,9 +6,11 @@ func _process(delta: float) -> void:
         
         if !item:
             var name = Label.new()
+            var player_num = Network.players[player_id].num
             name.name = 'name-' + str(player_id)
             name.size_flags_horizontal = true
             name.text = Network.players[player_id].name
+            name.add_color_override("font_color", Global.colors[player_num])
             
             $GridContainer.add_child(name)
             
@@ -16,6 +18,7 @@ func _process(delta: float) -> void:
             kills.name = 'kills-' + str(player_id)
             kills.size_flags_horizontal = true
             kills.text = str(0)
+            kills.add_color_override("font_color", Global.colors[player_num])
             
             $GridContainer.add_child(kills)
             
@@ -23,6 +26,7 @@ func _process(delta: float) -> void:
             deaths.name = 'deaths-' + str(player_id)
             deaths.size_flags_horizontal = true
             deaths.text = str(0)
+            deaths.add_color_override("font_color", Global.colors[player_num])
             $GridContainer.add_child(deaths)                        
         else:
             pass

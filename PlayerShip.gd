@@ -30,28 +30,7 @@ var hull = Global.PLAYER_HULL
 var shield = Global.PLAYER_SHIELD
 var die = false
 var explosion_instance
-var colors = [
-    'ffab91',
-    '1de9b6', 
-    'ce93d8', 
-    '7986cb', 
-    'ffcc80',
-    '00b0ff', 
-    'ff9100', 
-    'ef9a9a', 
-    'fff59d',
-    'bcaaa4',
-    'ff3d00', 
-    'eeff41', 
-    '80deea', 
-    '80cbc4', 
-    'e6ee9c', 
-    'ff5252', 
-    'e040fb', 
-    'ffd600', 
-    'eeeeee',
 
-]
 
 puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
@@ -67,6 +46,7 @@ func _ready() -> void:
     
     laser.player_owner = int(self.name)
     # Input.set_mouse_mode((Input.MOUSE_MODE_HIDDEN))
+    
 
 # todos
 remote func test1():
@@ -170,6 +150,7 @@ func _physics_process(delta: float) -> void:
     #    rpc('sync_speed', speed)
 
 func get_movement() -> Vector2:
+
     if(_high_speed()):
         return Vector2(cos(self.rotation), sin(self.rotation))
         
@@ -284,7 +265,7 @@ remotesync func plasma_shot(data):
     $'/root/Main'.add_child(projectile)
 
 func init(player_info):
-    color = colors[player_info.num]
+    color = Global.colors[player_info.num]
     
     $Sprite.modulate = color
     $Trail2D.modulate = color
