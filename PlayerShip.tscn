@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://PlayerShip.gd" type="Script" id=1]
 [ext_resource path="res://Assets/topdown-player.svg" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Trail2D.gd" type="Script" id=5]
 [ext_resource path="res://Assets/Energy.png" type="Texture" id=6]
 [ext_resource path="res://Assets/ShieldEnergy.png" type="Texture" id=7]
+[ext_resource path="res://PlayerCamera.gd" type="Script" id=8]
 [ext_resource path="res://Assets/Sounds/laser-ray_M1T0DY4O_WM.wav" type="AudioStream" id=9]
 [ext_resource path="res://Assets/Sounds/hyperjump.wav" type="AudioStream" id=10]
 
@@ -62,6 +63,14 @@ scale = 0.17
 ]]
 script = ExtResource( 1 )
 
+[node name="PlayerCamera" type="Camera2D" parent="."]
+rotation = -1.5708
+scale = Vector2( 0.3, 0.3 )
+current = true
+process_mode = 0
+smoothing_speed = 0.5
+script = ExtResource( 8 )
+
 [node name="LaserBeam2D" parent="." instance=ExtResource( 3 )]
 position = Vector2( 24, 0 )
 cast_to = Vector2( 100, 0 )
@@ -116,9 +125,6 @@ color_ramp = SubResource( 6 )
 [node name="ShipTrail" type="Timer" parent="."]
 wait_time = 0.1
 autostart = true
-
-[node name="Camera2D" type="Camera2D" parent="."]
-rotation = -1.5708
 
 [node name="Trail2D" type="Line2D" parent="."]
 position = Vector2( 0.402878, 0 )
