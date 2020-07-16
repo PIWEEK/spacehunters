@@ -196,7 +196,7 @@ remotesync func init_charge(data):
 
     charge =  true
     $ParticlesCharge.emitting = true
-    yield(get_tree().create_timer(2.5), "timeout")
+    yield(get_tree().create_timer(0.5), "timeout")
     
     if die:
         return
@@ -210,6 +210,7 @@ remotesync func init_charge(data):
         return
         
     speed = boost_speed
+
 
 func _unhandled_input(event: InputEvent) -> void:
     if die:

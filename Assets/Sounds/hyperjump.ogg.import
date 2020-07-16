@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/hyperjump.ogg-f38262712e24ce522861dd055a03d63e.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/hyperjump.ogg"
+dest_files=[ "res://.import/hyperjump.ogg-f38262712e24ce522861dd055a03d63e.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

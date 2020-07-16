@@ -9,7 +9,7 @@
 [ext_resource path="res://Assets/ShieldEnergy.png" type="Texture" id=7]
 [ext_resource path="res://PlayerCamera.gd" type="Script" id=8]
 [ext_resource path="res://Assets/Sounds/laser-ray_M1T0DY4O_WM.wav" type="AudioStream" id=9]
-[ext_resource path="res://Assets/Sounds/hyperjump.wav" type="AudioStream" id=10]
+[ext_resource path="res://Assets/Sounds/hyperjump.ogg" type="AudioStream" id=10]
 [ext_resource path="res://Assets/Sounds/Explosion+7.wav" type="AudioStream" id=11]
 
 [sub_resource type="CapsuleShape2D" id=1]
@@ -158,13 +158,13 @@ stream = ExtResource( 9 )
 volume_db = 20.0
 max_distance = 1500.0
 
-[node name="Hyperjump" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 10 )
-volume_db = -20.0
-pitch_scale = 1.35
-max_distance = 1500.0
-
 [node name="ShipDestuctionSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 11 )
+max_distance = 1500.0
+
+[node name="Hyperjump" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 10 )
+volume_db = 5.0
+pitch_scale = 1.5
 max_distance = 1500.0
 [connection signal="timeout" from="ShipTrail" to="." method="_on_ShipTrail_timeout"]
