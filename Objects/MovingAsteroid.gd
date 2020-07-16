@@ -40,7 +40,9 @@ func _process(delta):
 
 func _physics_process(delta):
     if is_network_master(): 
-        move_and_collide(velocity * delta)
+        var collision = move_and_collide(velocity * delta)
+        #if collision.collider:
+        #    print(collision.collider.name)
         Network.update_asteroid(self.id, position, rotation_degrees, get_scale())
 
 func _set_random_position():

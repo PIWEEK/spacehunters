@@ -143,7 +143,7 @@ func _physics_process(delta: float) -> void:
 
         var collision = move_and_collide(movement * speed * delta)
         
-        if collision:
+        if collision and not('PlasmaShot' in collision.collider.name) and not('LaserBeam2D' in collision.collider.name):
             cancel_hyper_speed()
 
         # rset("puppet_position", movement * speed * delta)
