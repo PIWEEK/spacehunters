@@ -100,6 +100,7 @@ func create_ship(id, info):
     new_player.name = str(id)
     new_player.set_network_master(id)
     new_player.init(info)
+    new_player.add_to_group('ship')
     $'/root/Main'.add_child(new_player)
 
 func update_position(id, position):

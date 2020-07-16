@@ -9,6 +9,7 @@ onready var RESPAWAN = $'/root/Main/CanvasLayer/Respawn'
 onready var Trail := $Trail2D
 onready var Stats = $'/root/Main/CanvasLayer/Players'
 onready var Wall = $'/root/Main/CanvasLayer/Wall'
+onready var ui = $'/root/Main/CanvasLayer/ShieldHullBar'
 
 var weapon1_sound_file = preload('res://Assets/Sounds/Weapon Shot Blaster-06.wav')
 var default_speed = 500
@@ -340,11 +341,17 @@ func ship_resurection():
     
     yield(get_tree().create_timer(1), 'timeout')
     Trail.is_emitting = true    
+   
+func heal(amount):
+    if hull + amount > Global.PLAYER_HULL:
+        amount = Global.PLAYER_HULL
+    
+    hull += amount
+        
+    ui._on_damage_hull(hull)
     
 func damage(who, amount):
     if is_network_master():
-        var ui = $'/root/Main/CanvasLayer/ShieldHullBar'
-    
         if shield > 0:
             shield = shield - amount
     
