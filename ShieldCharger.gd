@@ -9,6 +9,7 @@ const TIMER = 10
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+    $ChargingParticles.modulate = '00b0ff'
     var _timer = Timer.new()
     add_child(_timer)
     _timer.connect("timeout", self, "_on_Timer_timeout")
