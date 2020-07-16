@@ -167,7 +167,6 @@ puppet func remote_shield_down():
     shield_node.visible = false
     
 remotesync func remote_destroyed(attacker):
-    print(attacker, ' ', int(self.name))
     Stats.update_table(attacker, int(self.name))
     self.ship_destruction()
     
@@ -258,7 +257,7 @@ remotesync func plasma_shot(data):
     $'/root/Main'.add_child(projectile)
 
 func init(player_info):
-    print(player_info.num)
+    # print(player_info.num)
     global_position.x = Global._random_between(-2000, 2000)
     global_position.y = Global._random_between(-2000, 2000)
 
