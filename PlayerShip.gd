@@ -22,7 +22,6 @@ var explosion = preload('res://Explosion/Explosion.tscn')
 var can_fire = true
 var fire_rate := 0.10
 var charge = false
-var camera
 var boost_speed = 1800
 var hull = Global.PLAYER_HULL
 var shield = Global.PLAYER_SHIELD
@@ -57,7 +56,6 @@ puppet var puppet_global_position = Vector2()
 func _ready() -> void:
     if is_network_master():
         Network.player_id = int(name)
-        self.add_child(camera)
     else:
         self.remove_child($PlayerCamera)
 
@@ -119,7 +117,7 @@ func _physics_process(delta: float) -> void:
     if is_network_master():
         if _high_speed():
             if speed > boost_speed - 500:
-                camera.set_offset(Vector2(
+                $PlayerCamera.set_offset(Vector2(
                     rand_range(-1.0, 1.0) * shake_amount,
                     rand_range(-1.0, 1.0) * shake_amount
                 ))
@@ -143,7 +141,10 @@ func _physics_process(delta: float) -> void:
 
             rset_unreliable("puppet_direction", self.rotation)
 
-        move_and_collide(movement * speed * delta)
+        var collision = move_and_collide(movement * speed * delta)
+        
+        if collision:
+            cancel_hyper_speed()
 
         # rset("puppet_position", movement * speed * delta)
         rset_unreliable("puppet_global_position", position)
