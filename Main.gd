@@ -14,7 +14,9 @@ func create_player(id):
     player.set_name(str(id))
     player.set_network_master(id)
     var info = Network.self_data
-    player.init(info.name, info.position)
+    
+    player.init()
+    
     self.add_child(player)        
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -211,8 +211,9 @@ remotesync func plasma_shot(data):
 
     $'/root/Main'.add_child(projectile)
 
-func init(nickname, start_position):
-    global_position = start_position
+func init():
+    global_position.x = Global._random_between(-2000, 2000)
+    global_position.y = Global._random_between(-2000, 2000)
 
 func _high_speed():
     return speed > default_speed
