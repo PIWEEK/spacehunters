@@ -89,6 +89,7 @@ master func remove_asteroid(to_remove):
         queue_free()
 
 func disolve():
+    $DisolveSound.play()
     if not destroying:
         destroying = true
         tween.interpolate_method(
