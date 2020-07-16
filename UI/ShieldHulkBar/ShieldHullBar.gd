@@ -7,11 +7,10 @@ onready var HullBar = $HullBar;
 onready var ShieldTween = $ShieldBar/ShieldTween
 onready var HullTween = $HullBar/HullTween
 
-
-var hull := 300
-var shield := 100
-var max_hull := 300
-var max_shield := 100
+var hull = Global.PLAYER_HULL
+var shield = Global.PLAYER_SHIELD
+var max_hull := Global.PLAYER_HULL
+var max_shield := Global.PLAYER_SHIELD
 var minInt := 0
 
 onready var anim_player := $AnimationPlayer

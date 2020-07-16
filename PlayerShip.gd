@@ -8,6 +8,7 @@ onready var shield_node := $Shield
 onready var RESPAWAN = $'/root/Main/CanvasLayer/Respawn'
 onready var Trail := $Trail2D
 
+var weapon1_sound = preload('res://Assets/Sounds/Weapon Shot Blaster-06.wav')
 var default_speed = 400
 var shake_amount = 6.0
 var has_boost = false
@@ -22,9 +23,10 @@ var fire_rate := 0.2
 var charge = false
 var camera
 var boost_speed = 1500
-var hull := 300
-var shield := 100
+var hull = Global.PLAYER_HULL
+var shield = Global.PLAYER_SHIELD
 var die = false
+var explosion_instance
 
 puppet var puppet_position = Vector2()
 puppet var puppet_direction = 0.0
@@ -55,19 +57,12 @@ puppet func test3():
     print('test3 - puppet')
 
 func _process(delta: float) -> void:
-    if Input.is_action_pressed("charge"):
+    if is_network_master() && Input.is_action_pressed("charge"):
         $Hyperjump.play()
         
     if charge || die:
         return
-        
-    if Input.is_action_just_pressed("fire_weapon"):
-        $Weapon1Sound.play()
-    elif Input.is_action_just_pressed("fire_secondary_weapon"):
-        $Weapon2Sound.play()
-    elif Input.is_action_just_released("fire_secondary_weapon"):
-        $Weapon2Sound.stop()
-
+       
     if is_network_master():
         if Input.is_action_pressed("fire_weapon") && not Input.is_action_pressed("fire_secondary_weapon") && can_fire:
             rpc("plasma_shot", {
@@ -77,11 +72,20 @@ func _process(delta: float) -> void:
             can_fire = false
             yield(get_tree().create_timer(fire_rate), 'timeout')
             can_fire = true
+            
+            weapon1_sound()
 
-    if Input.is_action_just_pressed("fire_weapon"):
-        $Weapon1Sound.play()
-    elif Input.is_action_just_pressed("fire_secondary_weapon"):
-        $Weapon2Sound.play()
+func weapon1_sound():
+    var audio_stream = AudioStreamPlayer2D.new()
+    audio_stream.stream = weapon1_sound
+    
+    self.add_child(audio_stream)
+    
+    audio_stream.connect("finished", self, "audio_weapon1_finished", [audio_stream])
+    audio_stream.play()
+    
+func audio_weapon1_finished(audio_stream): 
+    self.remove_child(audio_stream)
 
 func get_dir():
     return self.get_angle_to(get_global_mouse_position())
@@ -152,6 +156,17 @@ func get_movement() -> Vector2:
         Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
     )
     
+puppet func remote_shield_down():
+    shield = 0
+    shield_node.visible = false
+    
+puppet func remote_destroyed():
+    self.ship_destruction()
+    
+puppet func remote_ship_resurection(new_position):
+    self.position = new_position
+    self.ship_resurection()
+    
 # called to cancel high speed in other players
 puppet func sync_speed(new_speed):
     speed = new_speed
@@ -182,6 +197,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
         if not event.is_action("fire_secondary_weapon"):
             return
+
+        if Input.is_action_just_released("fire_secondary_weapon"):
+            $Weapon2Sound.stop()
+        else:
+            $Weapon2Sound.play()
 
         rpc("fire_secondary_weapon", {
             plasma = event.is_action_pressed("fire_secondary_weapon"),
@@ -233,56 +253,69 @@ func _on_ShipTrail_timeout():
             var dir = ghost.get_angle_to( get_global_mouse_position())+90 # TODO: fix
             ghost.rotation += dir
 
+func ship_destruction():
+    die = true
+    explosion_instance = explosion.instance()
+    self.add_child(explosion_instance)
+    $Sprite.visible = false
+    $CollisionShape2D.disabled = true
+    Trail.is_emitting = false
+    
+func ship_resurection():
+    self.remove_child(explosion_instance)
+    
+    $Sprite.visible = true
+    $CollisionShape2D.disabled = false   
+    die = false   
+    hull = Global.PLAYER_HULL
+    shield = Global.PLAYER_SHIELD
+    shield_node.visible = true
+    
+    yield(get_tree().create_timer(1), 'timeout')
+    Trail.is_emitting = true    
+    
 func damage(amount):
-    var ui = $'/root/Main/CanvasLayer/ShieldHullBar'
-
-    if shield > 0:
-        shield = shield - amount
-
-        if self.is_network_master():
+    if is_network_master():
+        var ui = $'/root/Main/CanvasLayer/ShieldHullBar'
+    
+        if shield > 0:
+            shield = shield - amount
+    
             ui._on_damage_shield(shield)
-
-    if shield <= 0 && hull > 0:
-        shield_node.visible = false
-
-        if shield < 0:
-            hull = hull + shield
-            shield = 0
-        else:
-            hull = hull - amount
-
-        if self.is_network_master():
+    
+        if shield <= 0 && hull > 0:
+            shield_node.visible = false
+    
+            if shield < 0:
+                hull = hull + shield
+                shield = 0
+            else:
+                hull = hull - amount
+    
             ui._on_damage_hull(hull)
-
-    if hull <= 0 && !die:
-        die = true
-        var explosion_instance = explosion.instance()
-        self.add_child(explosion_instance)
-        $Sprite.visible = false
-        $CollisionShape2D.disabled = true
-        
-        Trail.is_emitting = false
-        yield(get_tree().create_timer(2), 'timeout')
-        if is_network_master():
-            RESPAWAN.init()
-        yield(get_tree().create_timer(RESPAWAN.init_time), 'timeout')
-        
-        global_position.x = Global._random_between(-2000, 2000)
-        global_position.y = Global._random_between(-2000, 2000)
             
-        $Sprite.visible = true
-        $CollisionShape2D.disabled = false   
-        die = false   
-        hull = 300
-        shield = 100
-        
-        ui._on_damage_shield(shield)
-        ui._on_damage_hull(hull)
-        shield_node.visible = true
-        self.remove_child(explosion_instance)
-        
-        yield(get_tree().create_timer(1), 'timeout')
-        Trail.is_emitting = true      
-        
+            if shield == 0:
+                rpc("remote_shield_down")                
+    
+        if hull <= 0 && !die:
+            rpc("remote_destroyed")
+            
+            self.ship_destruction()
+            
+            yield(get_tree().create_timer(2), 'timeout')
+            
+            if is_network_master():
+                RESPAWAN.init()
+                
+            yield(get_tree().create_timer(RESPAWAN.init_time), 'timeout')                
+            
+            global_position.x = Global._random_between(-2000, 2000)
+            global_position.y = Global._random_between(-2000, 2000)
+                
+            self.ship_resurection()
+            rpc("remote_ship_resurection", self.position)
+            
+            ui._on_damage_shield(shield)
+            ui._on_damage_hull(hull)
         
         
