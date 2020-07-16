@@ -318,6 +318,7 @@ func ship_destruction():
     $CollisionShape2D.disabled = true
     Trail.is_emitting = false
     cancel_hyper_speed()
+    $ShipDestuctionSound.play()
     
 func ship_resurection():
     self.remove_child(explosion_instance)
