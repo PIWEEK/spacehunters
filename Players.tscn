@@ -48,21 +48,21 @@ __meta__ = {
 }
 
 [node name="Name" type="Label" parent="GridContainer"]
-margin_right = 130.0
+margin_right = 129.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 text = "Name"
 
 [node name="Kills" type="Label" parent="GridContainer"]
-margin_left = 134.0
-margin_right = 264.0
+margin_left = 133.0
+margin_right = 262.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 text = "Kills"
 
 [node name="Deaths" type="Label" parent="GridContainer"]
-margin_left = 268.0
-margin_right = 398.0
+margin_left = 266.0
+margin_right = 395.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 text = "Deaths"

@@ -127,7 +127,6 @@ func _physics_process(delta: float) -> void:
     else:
         self.rotation = puppet_direction
         self.position = puppet_global_position
-        #move_and_collide(puppet_position)
 
     var player_id = int(name)
 
@@ -144,6 +143,9 @@ func _physics_process(delta: float) -> void:
 func get_movement() -> Vector2:
     if(_high_speed()):
         return Vector2(cos(self.rotation), sin(self.rotation))
+        
+    if not is_network_master():
+        return Vector2(cos(self.rotation), sin(self.rotation)) 
 
     return Vector2(
         Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
