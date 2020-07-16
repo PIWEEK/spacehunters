@@ -6,7 +6,14 @@ onready var game_stats := $CanvasLayer/Players
 func _ready() -> void:    
     var selfPeerID = get_tree().get_network_unique_id()
     create_player(selfPeerID)
-    $MainSceneMusic.play()  
+    $MainSceneMusic.play()
+    Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
+    
+func _input(event):
+    if event.is_action_pressed("ui_cancel"):
+        Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+    if event.is_action_pressed("confine_mouse"):
+        Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)      
 
 func create_player(id):
     Network.players[get_tree().get_network_unique_id()] = Network.self_data
