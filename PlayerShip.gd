@@ -19,7 +19,7 @@ var has_boost = false
 var color;
 var last_direction
 var speed = default_speed
-var turn_speed = deg2rad(5)
+var turn_speed = deg2rad(10)
 var plasma = preload('res://Projectiles/PlasmaShot.tscn')
 var explosion = preload('res://Explosion/Explosion.tscn')
 var can_fire = true
