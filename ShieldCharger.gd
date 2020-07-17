@@ -1,6 +1,6 @@
 extends Node2D
 
-const TIMER = 10
+const TIMER = 20
 
 var healing_body
 
