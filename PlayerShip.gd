@@ -62,6 +62,10 @@ func _init_charge_shield():
 
 func _charge_shield():
     if enable_charge_shield && shield < Global.PLAYER_SHIELD:
+        if shield <= 0:
+            shield_node.visible = true
+            rpc("remote_shield", shield + 2)
+        
         shield += 2
         if shield > Global.PLAYER_SHIELD:
             shield = Global.PLAYER_SHIELD
@@ -190,9 +194,13 @@ func cancel_hyper_speed():
     $Hyperjump.stop()
     charge =  false
 
-puppet func remote_shield_down():
-    shield = 0
-    shield_node.visible = false
+puppet func remote_shield(new_shield):
+    shield = new_shield
+
+    if shield <= 0:
+        shield_node.visible = false
+    else:
+        shield_node.visible = true
 
 remotesync func remote_destroyed(attacker):
     Stats.update_table(attacker, int(self.name))
@@ -348,9 +356,9 @@ func ship_resurection():
 
 func heal(amount):
     if hull + amount > Global.PLAYER_HULL:
-        amount = Global.PLAYER_HULL
-
-    hull += amount
+        hull = Global.PLAYER_HULL
+    else:
+        hull += amount
 
     ui._on_damage_hull(hull)
 
@@ -384,7 +392,7 @@ func damage(who, amount):
             ui._on_damage_hull(hull)
 
             if shield == 0:
-                rpc("remote_shield_down")
+                rpc("remote_shield", 0)
 
         if hull <= 0 && !die:
             rpc("remote_destroyed", who)

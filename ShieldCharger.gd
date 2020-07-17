@@ -34,4 +34,5 @@ func _on_Area2D_body_entered(body: Node) -> void:
         healing_body = body
 
 func _on_Area2D_body_exited(body: Node) -> void:
-    healing_body = null
+    if body.is_in_group('ship'):
+        healing_body = null
