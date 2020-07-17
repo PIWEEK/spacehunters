@@ -92,8 +92,16 @@ remote func _send_player_info(id, info):
         for player_id in players:
             if id != player_id:
                 rpc_id(id, '_send_player_info', player_id, players[player_id])
+                
+        var shield_position = $'/root/Main/ShieldCharger'.global_position
+        
+        rpc_id(id, 'sync_shield_init_position', shield_position.x, shield_position.y)
     
     create_ship(id, info)
+    
+remote func sync_shield_init_position(x, y):
+    $'/root/Main/ShieldCharger'.global_position.x = x
+    $'/root/Main/ShieldCharger'.global_position.y = y      
     
 func create_ship(id, info):
     var new_player = PlayerShip.instance()
