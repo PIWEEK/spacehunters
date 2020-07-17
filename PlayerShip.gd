@@ -10,7 +10,7 @@ onready var Trail := $Trail2D
 onready var Stats = $'/root/Main/CanvasLayer/Players'
 onready var Wall = $'/root/Main/CanvasLayer/Wall'
 onready var ui = $'/root/Main/CanvasLayer/ShieldHullBar'
-
+var ghost_trail = preload("res://GhostTrail.tscn")
 var weapon1_sound_file = preload('res://Assets/Sounds/Weapon Shot Blaster-06.wav')
 var default_speed = 500
 var shake_amount = 6.0
@@ -30,6 +30,7 @@ var hull = Global.PLAYER_HULL
 var shield = Global.PLAYER_SHIELD
 var die = false
 var explosion_instance
+var ghost
 
 
 puppet var puppet_position = Vector2()
@@ -168,6 +169,9 @@ func _physics_process(delta: float) -> void:
         network.update_position(int(name), position)
     else:
         queue_free()
+        
+    if ghost && !_high_speed():
+        self.remove_child(ghost)
 
     # cancel high speed & if uncommented sync with sound
     # if Input.get_action_strength("ui_down") && _high_speed():
@@ -321,7 +325,7 @@ func _on_ShipTrail_timeout():
         var move_vector = get_movement()
         if (move_vector.x != 0 || move_vector.y != 0):
             # first make a copy of ghost object
-            var ghost = preload("res://GhostTrail.tscn").instance()
+            ghost = ghost_trail.instance()
             # give the ghost a parent
             get_parent().add_child(ghost)
             ghost.position = position
