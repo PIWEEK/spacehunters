@@ -344,6 +344,7 @@ func ship_destruction():
     Trail.is_emitting = false
     cancel_hyper_speed()
     $ShipDestuctionSound.play()
+    laser.is_casting = false
 
 func ship_resurection():
     self.remove_child(explosion_instance)
